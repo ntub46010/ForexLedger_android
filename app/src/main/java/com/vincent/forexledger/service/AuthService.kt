@@ -31,7 +31,7 @@ object AuthService {
 
     private fun launchLoginFlow() {
         val authProviders = listOf(
-            //AuthUI.IdpConfig.FacebookBuilder().build(),
+            AuthUI.IdpConfig.FacebookBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
         val intent = AuthUI.getInstance()
