@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.vincent.forexledger.R
 
 object AuthService {
 
@@ -38,14 +39,15 @@ object AuthService {
             .createSignInIntentBuilder()
             .setAvailableProviders(authProviders)
             .setIsSmartLockEnabled(false)
+            .setTheme(R.style.Theme_ForexLedger)
             .build()
 
         loginFlowLauncher.launch(intent)
     }
 
-    fun logout(context: Context, callbackOnSuccess: () -> Unit) {
+    fun logout(context: Context, logoutSuccessListener: () -> Unit) {
         AuthUI.getInstance()
             .signOut(context)
-            .addOnSuccessListener { callbackOnSuccess.invoke() }
+            .addOnSuccessListener { logoutSuccessListener.invoke() }
     }
 }

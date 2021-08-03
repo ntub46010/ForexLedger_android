@@ -2,12 +2,14 @@ package com.vincent.forexledger
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseUser
 import com.vincent.forexledger.service.AuthService
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_progress_bar.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,9 +21,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        AuthService.initialize(loginFlowLauncher) {
-            displayUser(it)
-        }
+        AuthService.initialize(loginFlowLauncher) { processLoginComplete(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,19 +30,33 @@ class MainActivity : AppCompatActivity() {
 
         btLogout.setOnClickListener {
             AuthService.logout(this) {
-                tvEmail.text = "N/A"
+                tvEmail.text = null
+                tvEmail.visibility = View.INVISIBLE
+                btLogout.visibility = View.INVISIBLE
+                progressBar.visibility = View.VISIBLE
                 Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun processLoginComplete(user: FirebaseUser?) {
+        tvEmail.text = user?.email
+        progressBar.visibility = View.INVISIBLE
+        tvEmail.visibility = View.VISIBLE
+        btLogout.visibility = View.VISIBLE
+    }
+
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
-        result.idpResponse?.error?.message?.let {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        val response = result.idpResponse
+        if (response == null) {
+            // User cancel login flow.
+            progressBar.visibility = View.INVISIBLE
+            finish()
+        } else {
+            response.error?.message?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun displayUser(user: FirebaseUser?) {
-        tvEmail.text = user?.email
-    }
 }
