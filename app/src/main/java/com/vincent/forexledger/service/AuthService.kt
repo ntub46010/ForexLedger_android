@@ -39,7 +39,8 @@ object AuthService {
             .createSignInIntentBuilder()
             .setAvailableProviders(authProviders)
             .setIsSmartLockEnabled(false)
-            .setTheme(R.style.Theme_ForexLedger)
+            .setTheme(R.style.LoginPageTheme)
+            .setLogo(R.drawable.app_logo)
             .build()
 
         loginFlowLauncher.launch(intent)
