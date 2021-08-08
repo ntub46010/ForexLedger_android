@@ -1,27 +1,27 @@
 package com.vincent.forexledger.network
 
+import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object NetworkClient {
+    private const val SERVER_IP = "http://192.168.42.210:8080/"
     private val retrofit: Retrofit
     private var userApi: UserApi? = null
 
     init {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(interceptor).build()
+            .build()
 
-        val factory = GsonConverterFactory.create()
         retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.42.210:8080/")
-            .addConverterFactory(factory)
+            .baseUrl(SERVER_IP)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(client)
             .build()
     }
