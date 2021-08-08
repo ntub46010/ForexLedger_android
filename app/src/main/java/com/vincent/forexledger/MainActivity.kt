@@ -6,10 +6,16 @@ import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseUser
+import com.vincent.forexledger.network.NetworkClient
+import com.vincent.forexledger.request.UserRequest
+import com.vincent.forexledger.response.UserResponse
 import com.vincent.forexledger.service.AuthService
 import com.vincent.forexledger.utils.ViewUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_progress_bar.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,6 +51,17 @@ class MainActivity : AppCompatActivity() {
         tvEmail.text = user?.email
         ViewUtils.setVisible(tvEmail, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
+
+        NetworkClient.userAPI().createUser(UserRequest(""))
+                .enqueue(object : Callback<UserResponse> {
+                    override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                        Toast.makeText(this@MainActivity, response.code(), Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                        Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
