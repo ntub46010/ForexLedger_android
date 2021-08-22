@@ -59,7 +59,10 @@ class MainActivity : AppCompatActivity() {
                     user.displayName!!,
                     SocialLoginProvider.fromProviderId(user.providerData)!!,
                     user.uid)
-            val disposable = UserService.createUser(createUserReq) // TODO: implement callback
+            val disposable = UserService.createUser(this, createUserReq) {
+                        val location = it.headers()["Location"]
+                        Toast.makeText(this, location, Toast.LENGTH_SHORT).show()
+                    }
             disposables.add(disposable)
         } else {
             // TODO: obtain token
