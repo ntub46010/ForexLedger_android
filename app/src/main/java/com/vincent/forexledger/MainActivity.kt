@@ -6,12 +6,21 @@ import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseUser
+import com.vincent.forexledger.network.NetworkClient
+import com.vincent.forexledger.request.UserRequest
+import com.vincent.forexledger.response.UserResponse
 import com.vincent.forexledger.service.AuthService
 import com.vincent.forexledger.utils.ViewUtils
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_progress_bar.*
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+
+    private val disposables = CompositeDisposable()
 
     init {
         val contract = FirebaseAuthUIActivityResultContract()
@@ -32,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         btLogout.setOnClickListener {
             AuthService.logout(this) {
+                // FIXME: extract to another method
                 tvEmail.text = null
 
                 ViewUtils.setVisible(progressBar)
@@ -45,6 +55,18 @@ class MainActivity : AppCompatActivity() {
         tvEmail.text = user?.email
         ViewUtils.setVisible(tvEmail, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
+
+        val disposable = NetworkClient.userAPI()
+                .createUser(UserRequest(""))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<Response<UserResponse>>() {
+                    override fun onSuccess(response: Response<UserResponse>) =
+                        Toast.makeText(this@MainActivity, "onSuccess", Toast.LENGTH_SHORT).show()
+
+                    override fun onError(e: Throwable) =
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+                })
+        disposables.add(disposable)
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
@@ -60,4 +82,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
+    }
 }
