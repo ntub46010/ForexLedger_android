@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // TODO: maybe can extract callback to service
         AuthService.initialize(loginFlowLauncher) { processLoginComplete(it!!) }
     }
 
@@ -52,11 +53,11 @@ class MainActivity : AppCompatActivity() {
         val registerTime = user.metadata!!.creationTimestamp
         val lastLoginTime = user.metadata!!.lastSignInTimestamp
 
-        if (lastLoginTime - registerTime >= 500) {
+        if (lastLoginTime - registerTime < 500) {
             val createUserReq = CreateUserRequest(
                     user.email!!,
                     user.displayName!!,
-                    SocialLoginProvider.FACEBOOK, // TODO: get provider
+                    SocialLoginProvider.fromProviderId(user.providerData)!!,
                     user.uid)
             val disposable = UserService.createUser(createUserReq) // TODO: implement callback
             disposables.add(disposable)
@@ -64,11 +65,9 @@ class MainActivity : AppCompatActivity() {
             // TODO: obtain token
         }
 
-        /*
         tvEmail.text = user.email
         ViewUtils.setVisible(tvEmail, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
-        */
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
