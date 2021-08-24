@@ -57,24 +57,27 @@ object AuthService {
             user: FirebaseUser,
             onLoginSuccessListener: (ResponseEntity<Unit>) -> Unit) {
 
-        val registerTime = user.metadata!!.creationTimestamp
-        val lastLoginTime = user.metadata!!.lastSignInTimestamp
-        val isNewRegisteredUser = lastLoginTime - registerTime < 500
-        if (isNewRegisteredUser) {
-            val createUserReq = CreateUserRequest(
-                    user.email!!,
-                    user.displayName!!,
-                    SocialLoginProvider.fromProviderId(user.providerData)!!,
-                    user.uid)
-            var disposable: Disposable? = null
-            disposable = UserService.createUser(context, createUserReq) {
-                val response = ResponseEntity(it, listOf(disposable!!))
-                // TODO: if 422 then remove firebase user
-                onLoginSuccessListener.invoke(response)
-            }
-        } else {
-            // TODO: obtain access token
+        if (!isNewRegisteredUser(user)) {
+            // TODO: obtain token
             Toast.makeText(context, "obtain access token", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val disposables: MutableList<Disposable> = mutableListOf()
+        val createUserReq = genCreateUserRequest(user)
+        UserService.createUser(context, createUserReq) {
+            // when email address is registered on server
+            if (it.code() == 422) {
+                user.delete()
+                // FIXME: actually not success
+                onLoginSuccessListener.invoke(ResponseEntity(it, disposables))
+                return@createUser
+            }
+
+            // TODO: obtain token then wrap to response entity
+            Toast.makeText(context, "obtain access token", Toast.LENGTH_SHORT).show()
+        }.also {
+            disposables.add(it)
         }
     }
 
@@ -82,5 +85,20 @@ object AuthService {
         AuthUI.getInstance()
             .signOut(context)
             .addOnSuccessListener { logoutSuccessListener.invoke() }
+    }
+
+    private fun isNewRegisteredUser(user: FirebaseUser): Boolean {
+        val registerTime = user.metadata!!.creationTimestamp
+        val lastLoginTime = user.metadata!!.lastSignInTimestamp
+
+        return lastLoginTime - registerTime < 500
+    }
+
+    private fun genCreateUserRequest(user: FirebaseUser): CreateUserRequest {
+        return CreateUserRequest(
+                user.email!!,
+                user.displayName!!,
+                SocialLoginProvider.fromProviderId(user.providerData)!!,
+                user.uid)
     }
 }
