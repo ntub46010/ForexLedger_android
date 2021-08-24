@@ -5,11 +5,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseUser
-import com.vincent.forexledger.model.user.CreateUserRequest
-import com.vincent.forexledger.model.user.SocialLoginProvider
+import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.AuthService
-import com.vincent.forexledger.service.UserService
 import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,8 +24,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // TODO: maybe can extract callback to service
-        AuthService.initialize(loginFlowLauncher) { processLoginComplete(it!!) }
+        AuthService.initialize(this, loginFlowLauncher) { onLoginSuccess(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,37 +36,21 @@ class MainActivity : AppCompatActivity() {
         btLogout.setOnClickListener {
             AuthService.logout(this) {
                 // FIXME: extract to another method
-                tvEmail.text = null
+                tvMsg.text = null
 
                 ViewUtils.setVisible(progressBar)
-                ViewUtils.setInvisible(tvEmail, btLogout)
+                ViewUtils.setInvisible(tvMsg, btLogout)
                 Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun processLoginComplete(user: FirebaseUser) {
-        val registerTime = user.metadata!!.creationTimestamp
-        val lastLoginTime = user.metadata!!.lastSignInTimestamp
-
-        if (lastLoginTime - registerTime < 500) {
-            val createUserReq = CreateUserRequest(
-                    user.email!!,
-                    user.displayName!!,
-                    SocialLoginProvider.fromProviderId(user.providerData)!!,
-                    user.uid)
-            val disposable = UserService.createUser(this, createUserReq) {
-                        val location = it.headers()["Location"]
-                        Toast.makeText(this, location, Toast.LENGTH_SHORT).show()
-                    }
-            disposables.add(disposable)
-        } else {
-            // TODO: obtain token
-        }
-
-        tvEmail.text = user.email
-        ViewUtils.setVisible(tvEmail, btLogout, layout_universe)
+    private fun onLoginSuccess(response: ResponseEntity<Unit>) {
+        tvMsg.text = response.getStatusCode().toString()
+        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
+
+        response.disposables.forEach { this.disposables.add(it) }
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
