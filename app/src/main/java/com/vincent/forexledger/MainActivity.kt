@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.AuthService
+import com.vincent.forexledger.utils.GeneralCallback
 import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,7 +24,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        AuthService.initialize(this, loginFlowLauncher) { onLoginSuccess(it) }
+        val callback = GeneralCallback<String, String>(
+                { onLoginSuccess(it) },
+                { onLoginFailed(it) }
+        )
+
+        AuthService.initialize(this, loginFlowLauncher, callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +50,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onLoginSuccess(response: ResponseEntity<Unit>) {
-        tvMsg.text = response.getStatusCode().toString()
+    private fun onLoginSuccess(message: String) {
+        tvMsg.text = message
         ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
+    }
 
-        response.disposables.forEach { this.disposables.add(it) }
+    private fun onLoginFailed(message: String) {
+        tvMsg.text = message
+        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
+        ViewUtils.setInvisible(progressBar)
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {

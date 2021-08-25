@@ -2,7 +2,6 @@ package com.vincent.forexledger.service
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
@@ -10,7 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.user.CreateUserRequest
 import com.vincent.forexledger.model.user.SocialLoginProvider
-import com.vincent.forexledger.network.ResponseEntity
+import com.vincent.forexledger.utils.GeneralCallback
 import io.reactivex.rxjava3.disposables.Disposable
 
 object AuthService {
@@ -20,7 +19,7 @@ object AuthService {
     fun initialize(
             context: Context,
             loginFlowLauncher: ActivityResultLauncher<Intent>,
-            onLoginSuccessListener: (ResponseEntity<Unit>) -> Unit) {
+            callback: GeneralCallback<String, String>) {
 
         this.loginFlowLauncher = loginFlowLauncher
 
@@ -29,7 +28,7 @@ object AuthService {
             if (user == null) {
                 launchLoginFlow()
             } else {
-                onFirebaseAuthenticated(context, user, onLoginSuccessListener)
+                onFirebaseAuthenticated(context, user, callback)
             }
         }
 
@@ -55,27 +54,25 @@ object AuthService {
     private fun onFirebaseAuthenticated(
             context: Context,
             user: FirebaseUser,
-            onLoginSuccessListener: (ResponseEntity<Unit>) -> Unit) {
+            callback: GeneralCallback<String, String>) {
 
         if (!isNewRegisteredUser(user)) {
-            // TODO: obtain token
-            Toast.makeText(context, "obtain access token", Toast.LENGTH_SHORT).show()
+            callback.onSuccessListener.invoke("Ready to obtain access token from server.")
             return
         }
 
         val disposables: MutableList<Disposable> = mutableListOf()
+
         val createUserReq = genCreateUserRequest(user)
         UserService.createUser(context, createUserReq) {
             // when email address is registered on server
             if (it.code() == 422) {
-                user.delete()
-                // FIXME: actually not success
-                onLoginSuccessListener.invoke(ResponseEntity(it, disposables))
+                //user.delete()
+                callback.onFailListener.invoke("Try to create user in server but email is registered.")
                 return@createUser
             }
 
-            // TODO: obtain token then wrap to response entity
-            Toast.makeText(context, "obtain access token", Toast.LENGTH_SHORT).show()
+            callback.onSuccessListener.invoke("Create user in server successfully.")
         }.also {
             disposables.add(it)
         }
