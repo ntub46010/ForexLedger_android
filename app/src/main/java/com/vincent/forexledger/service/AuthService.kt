@@ -9,17 +9,17 @@ import com.google.firebase.auth.FirebaseUser
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.user.CreateUserRequest
 import com.vincent.forexledger.model.user.SocialLoginProvider
-import com.vincent.forexledger.utils.GeneralCallback
+import com.vincent.forexledger.utils.SimpleCallback
 import io.reactivex.rxjava3.disposables.Disposable
 
 object AuthService {
 
     private lateinit var loginFlowLauncher: ActivityResultLauncher<Intent>
+    private const val FIREBASE_CREATE_USER_BUFFER_TIME = 500
 
     fun initialize(
-            context: Context,
             loginFlowLauncher: ActivityResultLauncher<Intent>,
-            callback: GeneralCallback<String, String>) {
+            callback: SimpleCallback<String, String>) {
 
         this.loginFlowLauncher = loginFlowLauncher
 
@@ -28,7 +28,7 @@ object AuthService {
             if (user == null) {
                 launchLoginFlow()
             } else {
-                onFirebaseAuthenticated(context, user, callback)
+                onFirebaseAuthenticated(user, callback)
             }
         }
 
@@ -52,23 +52,23 @@ object AuthService {
     }
 
     private fun onFirebaseAuthenticated(
-            context: Context,
             user: FirebaseUser,
-            callback: GeneralCallback<String, String>) {
+            callback: SimpleCallback<String, String>) {
 
-        if (!isNewRegisteredUser(user)) {
+        if (isNotNewRegisteredUser(user)) {
             callback.onSuccessListener.invoke("Ready to obtain access token from server.")
             return
         }
 
+        // TODO: Remember to dispose them
         val disposables: MutableList<Disposable> = mutableListOf()
 
         val createUserReq = genCreateUserRequest(user)
-        UserService.createUser(context, createUserReq) {
+        UserService.createUser(createUserReq) {
             // when email address is registered on server
             if (it.code() == 422) {
-                //user.delete()
-                callback.onFailListener.invoke("Try to create user in server but email is registered.")
+                user.delete()
+                callback.onFailureListener.invoke("Try to create user in server but email is registered.")
                 return@createUser
             }
 
@@ -84,11 +84,12 @@ object AuthService {
             .addOnSuccessListener { logoutSuccessListener.invoke() }
     }
 
-    private fun isNewRegisteredUser(user: FirebaseUser): Boolean {
-        val registerTime = user.metadata!!.creationTimestamp
-        val lastLoginTime = user.metadata!!.lastSignInTimestamp
+    private fun isNotNewRegisteredUser(user: FirebaseUser): Boolean {
+        val creationTime = user.metadata!!.creationTimestamp
+        val lastSignInTime = user.metadata!!.lastSignInTimestamp
 
-        return lastLoginTime - registerTime < 500
+        return lastSignInTime - creationTime > FIREBASE_CREATE_USER_BUFFER_TIME
+                || System.currentTimeMillis() - creationTime > FIREBASE_CREATE_USER_BUFFER_TIME
     }
 
     private fun genCreateUserRequest(user: FirebaseUser): CreateUserRequest {

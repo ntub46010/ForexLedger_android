@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.vincent.forexledger.service.AuthService
-import com.vincent.forexledger.utils.GeneralCallback
+import com.vincent.forexledger.utils.SimpleCallback
 import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,12 +24,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val callback = GeneralCallback<String, String>(
+        val callback = SimpleCallback<String, String>(
                 { onLoginSuccess(it) },
                 { onLoginFailed(it) }
         )
 
-        AuthService.initialize(this, loginFlowLauncher, callback)
+        AuthService.initialize(loginFlowLauncher, callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

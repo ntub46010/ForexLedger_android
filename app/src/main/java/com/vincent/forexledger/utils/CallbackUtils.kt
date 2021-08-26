@@ -1,12 +1,17 @@
 package com.vincent.forexledger.utils
 
-import android.content.Context
-import android.widget.Toast
+import android.util.Log
 
 object CallbackUtils {
-    fun createShowToastCallback(context: Context): (Throwable) -> Unit {
+
+    fun createLogThrowableCallback(): (Throwable) -> Unit {
         return {
-            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            val message = it.message
+            if (message == null) {
+                it.printStackTrace()
+            } else {
+                Log.e("APPLICATION", message)
+            }
         }
     }
 }
