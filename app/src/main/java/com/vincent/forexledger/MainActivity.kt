@@ -5,18 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseUser
-import com.vincent.forexledger.network.NetworkClient
-import com.vincent.forexledger.request.UserRequest
-import com.vincent.forexledger.response.UserResponse
 import com.vincent.forexledger.service.AuthService
+import com.vincent.forexledger.utils.SimpleCallback
 import com.vincent.forexledger.utils.ViewUtils
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_progress_bar.*
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +24,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        AuthService.initialize(loginFlowLauncher) { processLoginComplete(it) }
+        val callback = SimpleCallback<String, String>(
+                { onLoginSuccess(it) },
+                { onLoginFailed(it) }
+        )
+
+        AuthService.initialize(loginFlowLauncher, callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,31 +41,25 @@ class MainActivity : AppCompatActivity() {
         btLogout.setOnClickListener {
             AuthService.logout(this) {
                 // FIXME: extract to another method
-                tvEmail.text = null
+                tvMsg.text = null
 
                 ViewUtils.setVisible(progressBar)
-                ViewUtils.setInvisible(tvEmail, btLogout)
+                ViewUtils.setInvisible(tvMsg, btLogout)
                 Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun processLoginComplete(user: FirebaseUser?) {
-        tvEmail.text = user?.email
-        ViewUtils.setVisible(tvEmail, btLogout, layout_universe)
+    private fun onLoginSuccess(message: String) {
+        tvMsg.text = message
+        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
+    }
 
-        val disposable = NetworkClient.userAPI()
-                .createUser(UserRequest(""))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<Response<UserResponse>>() {
-                    override fun onSuccess(response: Response<UserResponse>) =
-                        Toast.makeText(this@MainActivity, "onSuccess", Toast.LENGTH_SHORT).show()
-
-                    override fun onError(e: Throwable) =
-                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
-                })
-        disposables.add(disposable)
+    private fun onLoginFailed(message: String) {
+        tvMsg.text = message
+        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
+        ViewUtils.setInvisible(progressBar)
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
