@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val callback = SimpleCallback<String, String>(
-                { onLoginSuccess(it) },
+        val callback = SimpleCallback<Unit, String>(
+                { onLoginSuccess() },
                 { onLoginFailed(it) }
         )
 
@@ -50,16 +50,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onLoginSuccess(message: String) {
-        tvMsg.text = message
+    private fun onLoginSuccess() {
+        // TODO: display landing page
+        tvMsg.text = RuntimeCache.accessToken
         ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
         ViewUtils.setInvisible(progressBar)
     }
 
     private fun onLoginFailed(message: String) {
-        tvMsg.text = message
-        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
-        ViewUtils.setInvisible(progressBar)
+        AuthService.logout(this) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun processLoginIncomplete(result: FirebaseAuthUIAuthenticationResult) {
