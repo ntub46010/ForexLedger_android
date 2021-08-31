@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit
 object NetworkClient {
     private const val SERVER_IP = "http://192.168.42.210:8080/"
     private val retrofit: Retrofit
-    private var userApi: UserApi? = null
 
     init {
         val client = OkHttpClient.Builder()
@@ -26,10 +25,12 @@ object NetworkClient {
             .build()
     }
 
+    /*
     fun userAPI(): UserApi {
         if (userApi == null) {
             userApi = retrofit.create(UserApi::class.java)
         }
         return userApi!!
     }
+    */
 }
