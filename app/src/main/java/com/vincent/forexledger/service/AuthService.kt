@@ -7,6 +7,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.vincent.forexledger.R
+import com.vincent.forexledger.RuntimeCache
 import com.vincent.forexledger.utils.SimpleCallback
 
 object AuthService {
@@ -15,7 +16,7 @@ object AuthService {
 
     fun initialize(
             loginFlowLauncher: ActivityResultLauncher<Intent>,
-            callback: SimpleCallback<String, String>) {
+            callback: SimpleCallback<Unit, String>) {
 
         this.loginFlowLauncher = loginFlowLauncher
 
@@ -49,21 +50,25 @@ object AuthService {
 
     private fun onFirebaseAuthenticated(
             user: FirebaseUser,
-            callback: SimpleCallback<String, String>) {
+            callback: SimpleCallback<Unit, String>) {
 
         user.getIdToken(true)
                 .addOnSuccessListener { tokenResult ->
-                    val bearerToken = tokenResult.token!!
+                    RuntimeCache.accessToken = tokenResult.token!!
+                    callback.onSuccessListener.invoke(Unit)
                 }
                 .addOnFailureListener {
-                    callback.onFailureListener.invoke(it.message ?: "Get id token failed.")
+                    callback.onFailureListener.invoke(it.message ?: "Failed to get Firebase id token, please try to login again.")
                 }
     }
 
     fun logout(context: Context, logoutSuccessListener: () -> Unit) {
         AuthUI.getInstance()
             .signOut(context)
-            .addOnSuccessListener { logoutSuccessListener.invoke() }
+            .addOnSuccessListener {
+                RuntimeCache.accessToken = ""
+                logoutSuccessListener.invoke()
+            }
     }
 
 }
