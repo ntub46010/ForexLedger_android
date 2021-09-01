@@ -76,6 +76,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupNavigationBar() {
+        navLanding.setOnItemSelectedListener {
+            when (it.itemId) {
+                // TODO
+            }
+            true
+        }
+    }
+
     override fun onDestroy() {
         disposables.dispose()
         super.onDestroy()
