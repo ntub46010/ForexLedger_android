@@ -4,4 +4,7 @@
     <string name="facebook_application_id">369522001225679</string>
     <string name="facebook_app_id">369522001225679</string>
 
+    <string name="nav_title_exchange_rate">匯率</string>
+    <string name="nav_title_book">帳本</string>
+
 </resources>
