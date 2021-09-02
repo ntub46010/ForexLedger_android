@@ -9,4 +9,9 @@
         android:id="@+id/navBook"
         android:icon="@drawable/nav_book"
         android:title="@string/nav_title_book"/>
+
+    <item
+        android:id="@+id/navLogout"
+        android:icon="@drawable/icon_logout"
+        android:title="@string/logout"/>
 </menu>
