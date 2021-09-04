@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navExchangeRate"
-        android:icon="@drawable/nav_exchange_rate"
+        android:icon="@drawable/selector_nav_icon_exchange_rate"
         android:title="@string/nav_title_exchange_rate"/>
 
     <item
         android:id="@+id/navBook"
-        android:icon="@drawable/nav_book"
+        android:icon="@drawable/selector_nav_icon_book"
         android:title="@string/nav_title_book"/>
 
     <item
