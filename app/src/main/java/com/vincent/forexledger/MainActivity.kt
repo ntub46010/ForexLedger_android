@@ -2,9 +2,13 @@ package com.vincent.forexledger
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.core.view.forEach
+import androidx.fragment.app.Fragment
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.vincent.forexledger.fragment.FragmentProvider
 import com.vincent.forexledger.service.AuthService
 import com.vincent.forexledger.utils.SimpleCallback
 import com.vincent.forexledger.utils.ViewUtils
@@ -15,6 +19,7 @@ import kotlinx.android.synthetic.main.content_progress_bar.*
 class MainActivity : AppCompatActivity() {
 
     private val disposables = CompositeDisposable()
+    private var currentFragment: Fragment? = null
 
     init {
         val contract = FirebaseAuthUIActivityResultContract()
@@ -38,23 +43,12 @@ class MainActivity : AppCompatActivity() {
 
         ViewUtils.setInvisible(layout_universe)
 
-        btLogout.setOnClickListener {
-            AuthService.logout(this) {
-                // FIXME: extract to another method
-                tvMsg.text = null
-
-                ViewUtils.setVisible(progressBar)
-                ViewUtils.setInvisible(tvMsg, btLogout)
-                Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show()
-            }
-        }
+        setupNavigationBar()
     }
 
     private fun onLoginSuccess() {
-        // TODO: display landing page
-        tvMsg.text = RuntimeCache.accessToken
-        ViewUtils.setVisible(tvMsg, btLogout, layout_universe)
-        ViewUtils.setInvisible(progressBar)
+        navigationLanding.selectedItemId = R.id.navExchangeRate
+        ViewUtils.setVisible(layout_universe)
     }
 
     private fun onLoginFailed(message: String) {
@@ -73,6 +67,50 @@ class MainActivity : AppCompatActivity() {
             response.error?.message?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun logout() {
+        AuthService.logout(this) {
+            Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun navigate(fragment: Fragment) {
+        if (fragment == currentFragment) {
+            return
+        }
+
+        val transaction = supportFragmentManager.beginTransaction()
+        if (currentFragment == null) {
+            transaction.add(R.id.layout_navigation_container, fragment)
+        } else {
+            transaction.hide(currentFragment!!)
+            if (fragment.isAdded) {
+                transaction.show(fragment)
+            } else {
+                transaction.add(R.id.layout_navigation_container, fragment)
+            }
+        }
+
+        transaction.commit()
+        currentFragment = fragment;
+    }
+
+    private fun setupNavigationBar() {
+        navigationLanding.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.navExchangeRate -> navigate(FragmentProvider.exchangeRate())
+                R.id.navBook -> navigate(FragmentProvider.bookList())
+                R.id.navLogout -> logout()
+            }
+            true
+        }
+
+        navigationLanding.menu.forEach {
+            navigationLanding
+                    .findViewById<View>(it.itemId)
+                    .setOnLongClickListener { true }
         }
     }
 
