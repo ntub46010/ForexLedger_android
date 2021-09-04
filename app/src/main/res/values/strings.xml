@@ -9,4 +9,8 @@
 
     <string name="logout">登出</string>
 
+    <string name="currency_usd">美金</string>
+    <string name="currency_cny">人民幣</string>
+    <string name="currency_jpy">日圓</string>
+
 </resources>

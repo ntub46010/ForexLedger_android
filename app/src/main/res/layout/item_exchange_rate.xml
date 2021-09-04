@@ -35,11 +35,11 @@
             app:layout_constraintTop_toTopOf="@id/imgCurrency" />
 
         <TextView
-            android:id="@+id/txtCredit"
+            android:id="@+id/textSellingRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@color/sell_exchange_rate"
+            android:textColor="@color/exchange_sell_rate"
             android:textSize="@dimen/font_size_2"
             app:layout_constraintStart_toStartOf="@id/textCurrencyName"
             app:layout_constraintBottom_toBottomOf="@id/imgCurrency"/>
@@ -52,12 +52,12 @@
             app:layout_constraintGuide_percent="0.6" />
 
         <TextView
-            android:id="@+id/txtDebit"
+            android:id="@+id/textBuyingRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/sell_exchange_rate"
+            android:textColor="@color/exchange_buy_rate"
             android:textSize="@dimen/font_size_2"
-            app:layout_constraintBottom_toBottomOf="@+id/txtCredit"
+            app:layout_constraintBottom_toBottomOf="@+id/textSellingRate"
             app:layout_constraintStart_toStartOf="@+id/guideline" />
 
 
