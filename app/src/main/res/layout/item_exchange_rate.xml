@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/parent_normal_padding"
-        android:background="@color/brown">
+        android:background="@color/brown3">
 
         <ImageView
             android:id="@+id/imgCurrency"
@@ -38,7 +38,6 @@
             android:id="@+id/textSellingRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
             android:textColor="@color/exchange_sell_rate"
             android:textSize="@dimen/font_size_2"
             app:layout_constraintStart_toStartOf="@id/textCurrencyName"
