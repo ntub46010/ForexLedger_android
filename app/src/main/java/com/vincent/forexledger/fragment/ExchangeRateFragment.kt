@@ -22,9 +22,28 @@ class ExchangeRateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val exchangeRates = getFakeExRateData()
-        listExchangeRate.adapter = ExchangeRateListAdapter(exchangeRates)
-        listExchangeRate.layoutManager = LinearLayoutManager(context)
+        swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.brown1))
+        swipeRefreshLayout.setOnRefreshListener { loadExchangeRates() }
+
+        listExchangeRate.layoutManager = LinearLayoutManager(requireContext())
+
+        loadExchangeRates()
+    }
+
+    private fun loadExchangeRates() {
+        // TODO: load data from server
+        displayExchangeRate(getFakeExRateData())
+    }
+
+    private fun displayExchangeRate(data: List<ExchangeRateVO>) {
+        swipeRefreshLayout.isRefreshing = false
+
+        val adapter = listExchangeRate.adapter
+        if (adapter == null) {
+            listExchangeRate.adapter = ExchangeRateListAdapter(data)
+        } else {
+            (adapter as ExchangeRateListAdapter).refreshData(data)
+        }
     }
 
     private fun getFakeExRateData(): List<ExchangeRateVO> {

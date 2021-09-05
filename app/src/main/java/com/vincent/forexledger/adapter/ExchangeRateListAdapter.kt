@@ -31,5 +31,10 @@ class ExchangeRateListAdapter(var exchangeRates: List<ExchangeRateVO>)
         itemView.findViewById<TextView>(R.id.textBuyingRate).text = exchangeRate.buyingRate.toString()
     }
 
+    fun refreshData(data: List<ExchangeRateVO>) {
+        exchangeRates = data
+        notifyDataSetChanged()
+    }
+
     inner class ExchangeRateItemViewHolder(view: View): RecyclerView.ViewHolder(view)
 }
