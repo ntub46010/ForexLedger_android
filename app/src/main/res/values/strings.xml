@@ -9,4 +9,19 @@
 
     <string name="logout">登出</string>
 
+    <string name="currency_usd">美金</string>
+    <string name="currency_cny">人民幣</string>
+    <string name="currency_jpy">日圓</string>
+    <string name="currency_eur">歐元</string>
+    <string name="currency_hkd">港幣</string>
+    <string name="currency_aud">澳幣</string>
+    <string name="currency_zar">南非幣</string>
+    <string name="currency_cad">加拿大幣</string>
+    <string name="currency_gbp">英鎊</string>
+    <string name="currency_sgd">新加坡幣</string>
+    <string name="currency_chf">瑞士法郎</string>
+    <string name="currency_nzd">紐西蘭幣</string>
+    <string name="currency_sek">瑞典幣</string>
+    <string name="currency_thb">泰國銖</string>
+
 </resources>
