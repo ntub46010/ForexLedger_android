@@ -5,14 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.ExchangeRateListAdapter
+import com.vincent.forexledger.model.bank.BankType
 import com.vincent.forexledger.model.exchangerate.CurrencyType
 import com.vincent.forexledger.model.exchangerate.ExchangeRateVO
 import kotlinx.android.synthetic.main.fragment_exchange_rate.*
 
 class ExchangeRateFragment : Fragment() {
+
+    private var bankSelectingDialog: AlertDialog? = null
+    private var selectedBank: BankType = BankType.FUBON
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -22,16 +28,25 @@ class ExchangeRateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        layoutBankSelector.setOnClickListener {
+            if (bankSelectingDialog == null) {
+                createBankSelectingDialog()
+            }
+            bankSelectingDialog!!.show()
+        }
+
         swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.brown1))
-        swipeRefreshLayout.setOnRefreshListener { loadExchangeRates() }
+        swipeRefreshLayout.setOnRefreshListener { loadExchangeRates(selectedBank) }
 
         listExchangeRate.layoutManager = LinearLayoutManager(requireContext())
 
-        loadExchangeRates()
+        // get preference
+        loadExchangeRates(selectedBank)
     }
 
-    private fun loadExchangeRates() {
+    private fun loadExchangeRates(bankType: BankType) {
         // TODO: load data from server
+        Toast.makeText(requireContext(), "Load ${bankType.name} exchange rate.", Toast.LENGTH_SHORT).show()
         displayExchangeRate(getFakeExRateData())
     }
 
@@ -44,6 +59,17 @@ class ExchangeRateFragment : Fragment() {
         } else {
             (adapter as ExchangeRateListAdapter).refreshData(data)
         }
+    }
+
+    private fun createBankSelectingDialog() {
+        val bankArray = BankType.values()
+        val bankNames = bankArray.map { getString(it.localNameResource) }.toTypedArray()
+        val builder = AlertDialog.Builder(requireContext()).setItems(bankNames) { dialog, position ->
+            selectedBank = bankArray[position]
+            textSelectedBank.text = getString(selectedBank.localNameResource)
+            loadExchangeRates(selectedBank)
+        }
+        bankSelectingDialog = builder.create()
     }
 
     private fun getFakeExRateData(): List<ExchangeRateVO> {
