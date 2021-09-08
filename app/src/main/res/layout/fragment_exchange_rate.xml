@@ -12,7 +12,7 @@
     tools:context=".fragment.ExchangeRateFragment">
 
     <CheckBox
-        android:id="@+id/checkDefaultBank"
+        android:id="@+id/checkPreferredBrowsingBank"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="@string/default_browsing_bank"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textSelectedBank"
+            android:id="@+id/textCurrentBrowsingBank"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -53,7 +53,7 @@
         android:layout_width="250dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/widget_normal_spacing"
-        app:layout_constraintTop_toBottomOf="@id/checkDefaultBank"
+        app:layout_constraintTop_toBottomOf="@id/checkPreferredBrowsingBank"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

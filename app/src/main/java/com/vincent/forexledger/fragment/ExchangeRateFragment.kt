@@ -1,5 +1,6 @@
 package com.vincent.forexledger.fragment
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,8 +18,11 @@ import kotlinx.android.synthetic.main.fragment_exchange_rate.*
 
 class ExchangeRateFragment : Fragment() {
 
+    private val KEY_BANK_TYPE = "defaultBrowsingBank";
+
+    private lateinit var currentBrowsingBank: BankType
+    private var preferredBrowsingBank: BankType? = null
     private var bankSelectingDialog: AlertDialog? = null
-    private var selectedBank: BankType = BankType.FUBON
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,6 +31,8 @@ class ExchangeRateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val preference = requireContext()
+                .getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)
 
         layoutBankSelector.setOnClickListener {
             if (bankSelectingDialog == null) {
@@ -36,12 +42,25 @@ class ExchangeRateFragment : Fragment() {
         }
 
         swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.brown1))
-        swipeRefreshLayout.setOnRefreshListener { loadExchangeRates(selectedBank) }
-
+        swipeRefreshLayout.setOnRefreshListener { loadExchangeRates(currentBrowsingBank) }
         listExchangeRate.layoutManager = LinearLayoutManager(requireContext())
 
-        // get preference
-        loadExchangeRates(selectedBank)
+        checkPreferredBrowsingBank.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if (isChecked) {
+                preference.edit().putString(KEY_BANK_TYPE, currentBrowsingBank.name).apply()
+                preferredBrowsingBank = currentBrowsingBank
+            } else {
+                preference.edit().remove(KEY_BANK_TYPE).apply()
+                preferredBrowsingBank = null
+            }
+        }
+
+        val preferredBrowsingBankStr = preference.getString(KEY_BANK_TYPE, null)
+        val currentBrowsingBankStr = preferredBrowsingBankStr ?: BankType.FUBON.name
+        currentBrowsingBank = BankType.valueOf(currentBrowsingBankStr)
+        textCurrentBrowsingBank.text = getString(currentBrowsingBank.localNameResource)
+        checkPreferredBrowsingBank.isChecked = preferredBrowsingBankStr == currentBrowsingBankStr
+        loadExchangeRates(currentBrowsingBank)
     }
 
     private fun loadExchangeRates(bankType: BankType) {
@@ -65,9 +84,12 @@ class ExchangeRateFragment : Fragment() {
         val bankArray = BankType.values()
         val bankNames = bankArray.map { getString(it.localNameResource) }.toTypedArray()
         val builder = AlertDialog.Builder(requireContext()).setItems(bankNames) { dialog, position ->
-            selectedBank = bankArray[position]
-            textSelectedBank.text = getString(selectedBank.localNameResource)
-            loadExchangeRates(selectedBank)
+            if (currentBrowsingBank != bankArray[position]) {
+                currentBrowsingBank = bankArray[position]
+                textCurrentBrowsingBank.text = getString(currentBrowsingBank.localNameResource)
+                checkPreferredBrowsingBank.isChecked = preferredBrowsingBank == currentBrowsingBank
+                loadExchangeRates(currentBrowsingBank)
+            }
         }
         bankSelectingDialog = builder.create()
     }
