@@ -60,6 +60,7 @@ class ExchangeRateFragment : Fragment() {
         currentBrowsingBank = BankType.valueOf(currentBrowsingBankStr)
         textCurrentBrowsingBank.text = getString(currentBrowsingBank.localNameResource)
         checkPreferredBrowsingBank.isChecked = preferredBrowsingBankStr == currentBrowsingBankStr
+
         loadExchangeRates(currentBrowsingBank)
     }
 
@@ -95,6 +96,8 @@ class ExchangeRateFragment : Fragment() {
     }
 
     private fun getFakeExRateData(): List<ExchangeRateVO> {
+        return emptyList()
+        /*
         return listOf(
                 ExchangeRateVO(CurrencyType.USD, 27.7435, 27.6435),
                 ExchangeRateVO(CurrencyType.CNY, 4.3169, 4.2669),
@@ -111,7 +114,9 @@ class ExchangeRateFragment : Fragment() {
                 ExchangeRateVO(CurrencyType.SEK, 3.2633, 3.2033),
                 ExchangeRateVO(CurrencyType.THB, 0.8685, 0.8285)
         )
+        */
     }
+
 
     companion object {
         fun newInstance() = ExchangeRateFragment()

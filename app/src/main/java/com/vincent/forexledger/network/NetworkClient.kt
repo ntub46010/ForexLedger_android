@@ -11,6 +11,8 @@ object NetworkClient {
     private const val SERVER_IP = "http://192.168.42.210:8080/"
     private val retrofit: Retrofit
 
+    private var exchangeRateApi: ExchangeRateApi? = null
+
     init {
         val client = OkHttpClient.Builder()
             .readTimeout(60, TimeUnit.SECONDS)
@@ -25,12 +27,10 @@ object NetworkClient {
             .build()
     }
 
-    /*
-    fun userAPI(): UserApi {
-        if (userApi == null) {
-            userApi = retrofit.create(UserApi::class.java)
+    fun exchangeRateAPI(): ExchangeRateApi {
+        if (exchangeRateApi == null) {
+            exchangeRateApi = retrofit.create(ExchangeRateApi::class.java)
         }
-        return userApi!!
+        return exchangeRateApi!!
     }
-    */
 }
