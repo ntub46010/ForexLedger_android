@@ -7,6 +7,7 @@
     <string name="nav_title_exchange_rate">匯率</string>
     <string name="nav_title_book">帳本</string>
 
+    <string name="default_browsing_bank">預設查看銀行</string>
     <string name="logout">登出</string>
 
     <string name="currency_usd">美金</string>
@@ -23,5 +24,8 @@
     <string name="currency_nzd">紐西蘭幣</string>
     <string name="currency_sek">瑞典幣</string>
     <string name="currency_thb">泰國銖</string>
+
+    <string name="bank_fubon">富邦銀行</string>
+    <string name="bank_richart">Richart</string>
 
 </resources>

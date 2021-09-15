@@ -11,14 +11,52 @@
     android:background="@color/white"
     tools:context=".fragment.ExchangeRateFragment">
 
+    <CheckBox
+        android:id="@+id/checkPreferredBrowsingBank"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/default_browsing_bank"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutBankSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:padding="@dimen/parent_small_spacing"
+        android:background="@drawable/rounded_rectangle_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textCurrentBrowsingBank"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:textColor="@color/black2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_drop_down_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="250dp"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintTop_toBottomOf="@id/checkPreferredBrowsingBank"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listExchangeRate"
