@@ -15,7 +15,7 @@ object ExchangeRateService {
 
     fun getExchangeRate(
             bank: BankType,
-            callback: SimpleCallback<ResponseEntity<List<ExchangeRateVO>>, String?>) {
+            callback: SimpleCallback<ResponseEntity<List<ExchangeRateVO>>, String>) {
 
         val exchangeRateApi = NetworkClient.exchangeRateAPI()
         var disposable: Disposable? = null
@@ -29,7 +29,7 @@ object ExchangeRateService {
                     }
 
                     override fun onError(e: Throwable?) {
-                        callback.onFailureListener.invoke(e?.message)
+                        callback.onFailureListener.invoke(e?.message ?: "")
                     }
                 })
     }
