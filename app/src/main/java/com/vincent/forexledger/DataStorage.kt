@@ -1,5 +1,5 @@
 package com.vincent.forexledger
 
-object RuntimeCache {
+object DataStorage {
     var accessToken = ""
 }

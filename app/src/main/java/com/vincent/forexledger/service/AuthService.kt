@@ -7,7 +7,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.vincent.forexledger.R
-import com.vincent.forexledger.RuntimeCache
+import com.vincent.forexledger.DataStorage
 import com.vincent.forexledger.utils.SimpleCallback
 
 object AuthService {
@@ -54,7 +54,7 @@ object AuthService {
 
         user.getIdToken(true)
                 .addOnSuccessListener { tokenResult ->
-                    RuntimeCache.accessToken = tokenResult.token!!
+                    DataStorage.accessToken = tokenResult.token!!
                     callback.onSuccessListener.invoke(Unit)
                 }
                 .addOnFailureListener {
@@ -66,7 +66,7 @@ object AuthService {
         AuthUI.getInstance()
             .signOut(context)
             .addOnSuccessListener {
-                RuntimeCache.accessToken = ""
+                DataStorage.accessToken = ""
                 logoutSuccessListener.invoke()
             }
     }

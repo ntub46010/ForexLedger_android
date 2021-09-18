@@ -2,6 +2,7 @@ package com.vincent.forexledger.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vincent.forexledger.DataStorage
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.ExchangeRateListAdapter
 import com.vincent.forexledger.model.bank.BankType
-import com.vincent.forexledger.model.exchangerate.CurrencyType
 import com.vincent.forexledger.model.exchangerate.ExchangeRateVO
+import com.vincent.forexledger.network.ResponseEntity
+import com.vincent.forexledger.service.ExchangeRateService
+import com.vincent.forexledger.utils.SimpleCallback
+import com.vincent.forexledger.utils.ViewUtils
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.content_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_exchange_rate.*
 
 class ExchangeRateFragment : Fragment() {
@@ -23,6 +30,8 @@ class ExchangeRateFragment : Fragment() {
     private lateinit var currentBrowsingBank: BankType
     private var preferredBrowsingBank: BankType? = null
     private var bankSelectingDialog: AlertDialog? = null
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -60,23 +69,29 @@ class ExchangeRateFragment : Fragment() {
         currentBrowsingBank = BankType.valueOf(currentBrowsingBankStr)
         textCurrentBrowsingBank.text = getString(currentBrowsingBank.localNameResource)
         checkPreferredBrowsingBank.isChecked = preferredBrowsingBankStr == currentBrowsingBankStr
-        loadExchangeRates(currentBrowsingBank)
+
+        if (DataStorage.accessToken.isNotEmpty()) {
+            loadExchangeRates(currentBrowsingBank)
+        }
     }
 
-    private fun loadExchangeRates(bankType: BankType) {
-        // TODO: load data from server
-        Toast.makeText(requireContext(), "Load ${bankType.name} exchange rate.", Toast.LENGTH_SHORT).show()
-        displayExchangeRate(getFakeExRateData())
+    private fun loadExchangeRates(bank: BankType) {
+        val callback = SimpleCallback<ResponseEntity<List<ExchangeRateVO>>, String>(
+                { onExchangeRateReturned(it) },
+                { Log.e("APPLICATION", it) }
+        )
+        ExchangeRateService.getExchangeRate(bank, callback)
     }
 
     private fun displayExchangeRate(data: List<ExchangeRateVO>) {
-        swipeRefreshLayout.isRefreshing = false
+        val sortedData = data.sortedBy { it.currencyType.ordinal }
+        ViewUtils.setInvisible(progressBar)
 
         val adapter = listExchangeRate.adapter
         if (adapter == null) {
-            listExchangeRate.adapter = ExchangeRateListAdapter(data)
+            listExchangeRate.adapter = ExchangeRateListAdapter(sortedData)
         } else {
-            (adapter as ExchangeRateListAdapter).refreshData(data)
+            (adapter as ExchangeRateListAdapter).refreshData(sortedData)
         }
     }
 
@@ -94,7 +109,23 @@ class ExchangeRateFragment : Fragment() {
         bankSelectingDialog = builder.create()
     }
 
+    private fun onExchangeRateReturned(response: ResponseEntity<List<ExchangeRateVO>>) {
+        swipeRefreshLayout.isRefreshing = false
+        ViewUtils.setInvisible(progressBar)
+
+        if (response.getStatusCode() == 404) {
+            Toast.makeText(requireContext(), getString(R.string.unsupported_bank), Toast.LENGTH_SHORT).show()
+        } else {
+            displayExchangeRate(response.getBody() ?: emptyList())
+        }
+        response.disposables
+                .filterNotNull()
+                .forEach { d -> disposables.add(d) }
+    }
+
     private fun getFakeExRateData(): List<ExchangeRateVO> {
+        return emptyList()
+        /*
         return listOf(
                 ExchangeRateVO(CurrencyType.USD, 27.7435, 27.6435),
                 ExchangeRateVO(CurrencyType.CNY, 4.3169, 4.2669),
@@ -111,6 +142,12 @@ class ExchangeRateFragment : Fragment() {
                 ExchangeRateVO(CurrencyType.SEK, 3.2633, 3.2033),
                 ExchangeRateVO(CurrencyType.THB, 0.8685, 0.8285)
         )
+        */
+    }
+
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
     }
 
     companion object {
