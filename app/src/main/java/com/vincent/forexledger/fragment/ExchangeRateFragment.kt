@@ -18,7 +18,9 @@ import com.vincent.forexledger.model.exchangerate.ExchangeRateVO
 import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.ExchangeRateService
 import com.vincent.forexledger.utils.SimpleCallback
+import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.content_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_exchange_rate.*
 
 class ExchangeRateFragment : Fragment() {
@@ -83,6 +85,7 @@ class ExchangeRateFragment : Fragment() {
 
     private fun displayExchangeRate(data: List<ExchangeRateVO>) {
         val sortedData = data.sortedBy { it.currencyType.ordinal }
+        ViewUtils.setInvisible(progressBar)
 
         val adapter = listExchangeRate.adapter
         if (adapter == null) {
@@ -108,6 +111,7 @@ class ExchangeRateFragment : Fragment() {
 
     private fun onExchangeRateReturned(response: ResponseEntity<List<ExchangeRateVO>>) {
         swipeRefreshLayout.isRefreshing = false
+        ViewUtils.setInvisible(progressBar)
 
         if (response.getStatusCode() == 404) {
             Toast.makeText(requireContext(), getString(R.string.unsupported_bank), Toast.LENGTH_SHORT).show()
