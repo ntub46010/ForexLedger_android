@@ -45,8 +45,8 @@ class ExchangeRateFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener { loadExchangeRates(currentBrowsingBank) }
         listExchangeRate.layoutManager = LinearLayoutManager(requireContext())
 
-        checkPreferredBrowsingBank.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (isChecked) {
+        checkPreferredBrowsingBank.setOnClickListener {
+            if (preferredBrowsingBank == null || preferredBrowsingBank == currentBrowsingBank) {
                 preference.edit().putString(KEY_BANK_TYPE, currentBrowsingBank.name).apply()
                 preferredBrowsingBank = currentBrowsingBank
             } else {
