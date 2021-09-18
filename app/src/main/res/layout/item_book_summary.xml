@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/parent_normal_padding"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/imgCurrency"
+        android:src="@drawable/currency_aud"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textName"
+        android:text="Richart 澳幣"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/widget_big_spacing"
+        android:textSize="@dimen/font_size_1"
+        android:textColor="@color/black"
+        android:maxLines="1"
+        app:layout_constraintTop_toTopOf="@id/imgCurrency"
+        app:layout_constraintBottom_toBottomOf="@id/imgCurrency"
+        app:layout_constraintStart_toEndOf="@id/imgCurrency"/>
+
+    <TextView
+        android:id="@+id/textCurrency"
+        android:text="USD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black2"
+        app:layout_constraintTop_toBottomOf="@id/imgCurrency"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textBalance"
+        android:text="2,000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black2"
+        app:layout_constraintTop_toBottomOf="@id/imgCurrency"
+        app:layout_constraintEnd_toStartOf="@id/textCurrency"/>
+
+    <TextView
+        android:id="@+id/textTWD"
+        android:text="TWD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black2"
+        app:layout_constraintTop_toBottomOf="@id/textCurrency"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textProfit"
+        android:text="+ 4,000 (22.2%)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="#700"
+        app:layout_constraintTop_toBottomOf="@id/textCurrency"
+        app:layout_constraintEnd_toStartOf="@id/textTWD"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
