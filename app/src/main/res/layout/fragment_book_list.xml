@@ -5,6 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="@dimen/parent_normal_padding"
+    android:paddingEnd="@dimen/parent_normal_padding"
+    android:paddingTop="@dimen/parent_normal_padding"
     android:background="@color/white"
     tools:context=".fragment.BookListFragment">
 

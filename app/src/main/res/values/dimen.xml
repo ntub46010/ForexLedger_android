@@ -3,6 +3,7 @@
     <dimen name="widget_big_spacing">12dp</dimen>
     <dimen name="widget_normal_spacing">8dp</dimen>
     <dimen name="parent_small_spacing">5dp</dimen>
+    <dimen name="parent_small_padding">8dp</dimen>
     <dimen name="parent_normal_padding">10dp</dimen>
     <dimen name="card_corner_radius">8dp</dimen>
 
