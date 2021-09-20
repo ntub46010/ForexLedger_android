@@ -1,5 +1,6 @@
 package com.vincent.forexledger.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -24,29 +25,34 @@ class BookListAdapter(var books: List<BookListVO>)
         return BookListViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
         val itemView = holder.itemView
         val book = books[position]
         val twdProfitValue = book.twdProfit
 
         itemView.findViewById<ImageView>(R.id.imgCurrency).setImageResource(book.currencyType.imageResource)
-        itemView.findViewById<TextView>(R.id.textName).text = book.name
+        itemView.findViewById<TextView>(R.id.textBookName).text = book.name
         itemView.findViewById<TextView>(R.id.textBalance).text = FormatUtils.formatMoney(book.balance)
         itemView.findViewById<TextView>(R.id.textCurrency).text = book.currencyType.name
 
+        val textViewProfit = itemView.findViewById<TextView>(R.id.textProfit)
+        val textViewProfitRate = itemView.findViewById<TextView>(R.id.textProfitRate)
+
         val profitSign = if (twdProfitValue > 0) "+" else ""
         val twdProfitStr = FormatUtils.formatMoney(twdProfitValue)
-        val profitPercentageStr = FormatUtils.formatMoney(abs(book.profitRate) * 100)
-
-        val textViewProfit = itemView.findViewById<TextView>(R.id.textProfit)
-//        textViewProfit.text = "$profitSign$twdProfitStr ($profitPercentageStr%)"
         textViewProfit.text = "$profitSign$twdProfitStr"
 
         if (twdProfitValue > 0) {
             textViewProfit.setTextColor(holder.getContext().getColor(R.color.profit_positive))
+            textViewProfitRate.setTextColor(holder.getContext().getColor(R.color.profit_positive))
         } else if (twdProfitValue < 0) {
             textViewProfit.setTextColor(holder.getContext().getColor(R.color.profit_negative))
+            textViewProfitRate.setTextColor(holder.getContext().getColor(R.color.profit_negative))
         }
+
+        val profitPercentageStr = FormatUtils.formatDecimalPlaces(book.profitRate * 100, 2)
+        textViewProfitRate.text = "$profitSign$profitPercentageStr"
     }
 
     fun refreshData(data: List<BookListVO>) {
