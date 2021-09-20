@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vincent.forexledger.R
+import com.vincent.forexledger.adapter.BookListAdapter
 import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.model.exchangerate.CurrencyType
 import kotlinx.android.synthetic.main.fragment_book_list.*
@@ -26,18 +27,29 @@ class BookListFragment : Fragment() {
         swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.brown1))
         swipeRefreshLayout.setOnRefreshListener { getBooks() }
 
-        listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
+        listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         getBooks()
     }
 
     private fun getBooks() {
         // TODO: get data from server
+        displayBooks(genFakeData())
+    }
+
+    private fun displayBooks(books: List<BookListVO>) {
+        val adapter = listBook.adapter
+
+        if (adapter == null) {
+            listBook.adapter = BookListAdapter(books)
+        } else {
+            (adapter as BookListAdapter).refreshData(books)
+        }
     }
 
     private fun genFakeData(): List<BookListVO> {
         return listOf(
-            BookListVO("1", "富邦南非幣", CurrencyType.ZAR, 51344.72, -2042, -0.021),
+            BookListVO("1", "富邦南非幣", CurrencyType.ZAR, 51344.72, 2042, 0.021),
             BookListVO("2", "富邦瑞士法郎", CurrencyType.CHF, 645.49, -554, -0.028),
             BookListVO("3", "富邦歐元", CurrencyType.EUR, 700.51, -538, -0.023),
             BookListVO("4", "富邦英鎊", CurrencyType.GBP, 543.33, -351, -0.017),

@@ -8,4 +8,5 @@
 
     <dimen name="font_size_1">18sp</dimen>
     <dimen name="font_size_2">16sp</dimen>
+    <dimen name="font_size_3">14sp</dimen>
 </resources>
