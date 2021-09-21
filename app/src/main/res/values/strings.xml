@@ -10,6 +10,7 @@
     <string name="default_browsing_bank">預設查看銀行</string>
     <string name="logout">登出</string>
     <string name="unsupported_bank">不支援的銀行</string>
+    <string name="create_book">建立帳本</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>
