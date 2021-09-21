@@ -48,6 +48,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editBank"
                 style="@style/EditText"
+                android:paddingEnd="10dp"
+                android:drawableEnd="@drawable/icon_drop_down_arrow"
                 android:editable="false"
                 android:clickable="true"
                 android:focusable="true" />
@@ -66,6 +68,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editCurrencyType"
                 style="@style/EditText"
+                android:paddingEnd="10dp"
+                android:drawableEnd="@drawable/icon_drop_down_arrow"
                 android:editable="false"
                 android:clickable="true"
                 android:focusable="true" />
