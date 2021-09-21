@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vincent.forexledger.R
+import com.vincent.forexledger.activity.EditBookActivity
 import com.vincent.forexledger.adapter.BookListAdapter
 import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.model.exchangerate.CurrencyType
@@ -31,8 +32,7 @@ class BookListFragment : Fragment() {
         listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         btnCreateBook.setOnClickListener {
-            // TODO
-            //startActivity(Intent(requireContext(), null))
+            startActivity(Intent(requireContext(), EditBookActivity::class.java))
         }
 
         getBooks()

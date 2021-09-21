@@ -1,4 +1,4 @@
-package com.vincent.forexledger
+package com.vincent.forexledger.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.vincent.forexledger.R
 import com.vincent.forexledger.fragment.FragmentProvider
 import com.vincent.forexledger.service.AuthService
 import com.vincent.forexledger.utils.SimpleCallback
