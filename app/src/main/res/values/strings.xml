@@ -11,6 +11,9 @@
     <string name="logout">登出</string>
     <string name="unsupported_bank">不支援的銀行</string>
     <string name="create_book">建立帳本</string>
+    <string name="book_name">帳本名稱</string>
+    <string name="bank">銀行</string>
+    <string name="currency_type">幣別</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>
