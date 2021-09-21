@@ -1,5 +1,6 @@
 package com.vincent.forexledger.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -28,6 +29,11 @@ class BookListFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener { getBooks() }
 
         listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+
+        btnCreateBook.setOnClickListener {
+            // TODO
+            //startActivity(Intent(requireContext(), null))
+        }
 
         getBooks()
     }
