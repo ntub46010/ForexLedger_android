@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.bank.BankType
+import com.vincent.forexledger.model.book.CreateBookRequest
 import com.vincent.forexledger.model.exchangerate.CurrencyType
 import kotlinx.android.synthetic.main.content_toolbar.toolbar
 import kotlinx.android.synthetic.main.fragment_edit_book.*
@@ -71,7 +72,36 @@ class EditBookActivity : AppCompatActivity() {
     }
 
     private fun createBook() {
-        Toast.makeText(this, "SUBMIT", Toast.LENGTH_SHORT).show()
+        inputBookName.error = null
+        inputBank.error = null
+        inputCurrencyType.error = null
+
+        if (validateData()) {
+            val bookName = editBookName.text.toString()
+            val request = CreateBookRequest(bookName, selectedBank!!, selectedCurrencyType!!)
+            Toast.makeText(this, "SUBMIT", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun validateData(): Boolean {
+        var isValid = true
+
+        if (editBookName.text.toString().isEmpty()) {
+            inputBookName.error = getString(R.string.error_should_not_be_empty)
+            isValid = false
+        }
+
+        if (selectedBank == null) {
+            inputBank.error = getString(R.string.error_should_select_one)
+            isValid = false
+        }
+
+        if (selectedCurrencyType == null) {
+            inputCurrencyType.error = getString(R.string.error_should_select_one)
+            isValid = false
+        }
+
+        return isValid
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
