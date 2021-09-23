@@ -39,7 +39,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputBank"
             style="@style/TextInputLayout"
-            android:layout_marginTop="@dimen/widget_normal_spacing"
+            android:layout_marginTop="@dimen/widget_big_spacing"
             android:hint="@string/bank"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputCurrencyType"
             style="@style/TextInputLayout"
-            android:layout_marginTop="@dimen/widget_normal_spacing"
+            android:layout_marginTop="@dimen/widget_big_spacing"
             android:hint="@string/currency_type"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

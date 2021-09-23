@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_edit_book.*
 class EditBookActivity : AppCompatActivity() {
 
     private var bankSelectingDialog: AlertDialog? = null
-    private var currencySelectingDialog: AlertDialog? = null
+    private var currencySelectingDialogMap: MutableMap<BankType, AlertDialog> = mutableMapOf()
 
     private var selectedBank: BankType? = null
     private var selectedCurrencyType: CurrencyType? = null
@@ -34,10 +34,13 @@ class EditBookActivity : AppCompatActivity() {
         }
 
         editCurrencyType.setOnClickListener {
-            if (currencySelectingDialog == null) {
-                initCurrencyDialog()
+            if (selectedBank != null) {
+                val dialog = currencySelectingDialogMap[selectedBank]
+                        ?: initCurrencyDialog(selectedBank!!)
+                dialog.show()
+            } else {
+                Toast.makeText(this, getString(R.string.select_bank_first), Toast.LENGTH_SHORT).show()
             }
-            currencySelectingDialog!!.show()
         }
     }
 
@@ -54,12 +57,20 @@ class EditBookActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this).setItems(bankLocalNames) { dialog, position ->
             selectedBank = bankTypes[position]
             editBank.setText(bankLocalNames[position])
+            inputBank.error = null
+
+            selectedCurrencyType?.let {
+                if (!selectedBank!!.isSupportedCurrency(it)) {
+                    inputCurrencyType.error = getString(R.string.error_unsupported_bank_currency)
+                }
+            }
+
         }
         bankSelectingDialog = builder.create()
     }
 
-    private fun initCurrencyDialog() {
-        val currencyTypes = CurrencyType.values()
+    private fun initCurrencyDialog(bank: BankType): AlertDialog {
+        val currencyTypes = bank.supportedCurrency
         val currencyLocalNames = currencyTypes.map {
             "${getString(it.localNameResource)} ${it.name}"
         }.toTypedArray()
@@ -67,8 +78,12 @@ class EditBookActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this).setItems(currencyLocalNames) { dialog, position ->
             selectedCurrencyType = currencyTypes[position]
             editCurrencyType.setText(currencyLocalNames[position])
+            inputCurrencyType.error = null
         }
-        currencySelectingDialog = builder.create()
+
+        return builder.create().also {
+            currencySelectingDialogMap[bank] = it
+        }
     }
 
     private fun createBook() {
@@ -79,7 +94,7 @@ class EditBookActivity : AppCompatActivity() {
         if (validateData()) {
             val bookName = editBookName.text.toString()
             val request = CreateBookRequest(bookName, selectedBank!!, selectedCurrencyType!!)
-            Toast.makeText(this, "SUBMIT", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, request.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,13 +106,21 @@ class EditBookActivity : AppCompatActivity() {
             isValid = false
         }
 
-        if (selectedBank == null) {
+        val bank = selectedBank
+        val currencyType = selectedCurrencyType
+
+        if (bank == null) {
             inputBank.error = getString(R.string.error_should_select_one)
             isValid = false
         }
 
-        if (selectedCurrencyType == null) {
+        if (currencyType == null) {
             inputCurrencyType.error = getString(R.string.error_should_select_one)
+            isValid = false
+        }
+
+        if (bank != null && currencyType != null && !bank.isSupportedCurrency(currencyType)) {
+            inputCurrencyType.error = getString(R.string.error_unsupported_bank_currency)
             isValid = false
         }
 
