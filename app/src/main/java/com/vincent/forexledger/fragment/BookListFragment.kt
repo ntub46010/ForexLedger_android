@@ -1,5 +1,6 @@
 package com.vincent.forexledger.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vincent.forexledger.R
+import com.vincent.forexledger.activity.EditBookActivity
 import com.vincent.forexledger.adapter.BookListAdapter
 import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.model.exchangerate.CurrencyType
@@ -28,6 +30,10 @@ class BookListFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener { getBooks() }
 
         listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+
+        btnCreateBook.setOnClickListener {
+            startActivity(Intent(requireContext(), EditBookActivity::class.java))
+        }
 
         getBooks()
     }

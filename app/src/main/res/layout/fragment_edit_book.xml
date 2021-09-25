@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.EditBookActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/content_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputBookName"
+            android:hint="@string/book_name"
+            style="@style/TextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editBookName"
+                style="@style/EditText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputBank"
+            style="@style/TextInputLayout"
+            android:layout_marginTop="@dimen/widget_big_spacing"
+            android:hint="@string/bank"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputBookName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editBank"
+                style="@style/EditText"
+                android:paddingEnd="10dp"
+                android:drawableEnd="@drawable/icon_drop_down_arrow"
+                android:editable="false"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputCurrencyType"
+            style="@style/TextInputLayout"
+            android:layout_marginTop="@dimen/widget_big_spacing"
+            android:hint="@string/currency_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputBank">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editCurrencyType"
+                style="@style/EditText"
+                android:paddingEnd="10dp"
+                android:drawableEnd="@drawable/icon_drop_down_arrow"
+                android:editable="false"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
