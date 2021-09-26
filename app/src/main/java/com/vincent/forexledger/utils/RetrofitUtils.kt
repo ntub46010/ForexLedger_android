@@ -26,4 +26,21 @@ object RetrofitUtils {
                     }
                 })
     }
+
+    fun <T> sendRequest(single: Single<Response<T>>, callback: ResponseCallback<T, String>) {
+        var disposable: Disposable? = null
+        disposable = single
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<Response<T>>() {
+                    override fun onSuccess(response: Response<T>?) {
+                        val responseEntity = ResponseEntity(response!!, listOf(disposable))
+                        callback.onSuccessListener.invoke(responseEntity)
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        callback.onFailureListener.invoke(e?.message ?: "")
+                    }
+                })
+    }
 }
