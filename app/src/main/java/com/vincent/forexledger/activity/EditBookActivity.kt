@@ -1,5 +1,6 @@
 package com.vincent.forexledger.activity
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ class EditBookActivity : AppCompatActivity() {
 
     private var bankSelectingDialog: AlertDialog? = null
     private var currencySelectingDialogMap: MutableMap<BankType, AlertDialog> = mutableMapOf()
+    private var waitingDialog: Dialog? = null
 
     private var selectedBank: BankType? = null
     private var selectedCurrencyType: CurrencyType? = null
@@ -93,6 +95,13 @@ class EditBookActivity : AppCompatActivity() {
         }
     }
 
+    private fun initWaitingDialog() {
+        waitingDialog = Dialog(this).also {
+            it.setContentView(R.layout.dialog_waiting)
+            it.setCancelable(false)
+        }
+    }
+
     private fun createBook() {
         inputBookName.error = null
         inputBank.error = null
@@ -101,10 +110,15 @@ class EditBookActivity : AppCompatActivity() {
         if (!validateData()) {
             return
         }
+
         val bookName = editBookName.text.toString()
         val request = CreateBookRequest(bookName, selectedBank!!, selectedCurrencyType!!)
 
-        // TODO: Show waiting dialog
+        if (waitingDialog == null) {
+            initWaitingDialog()
+        }
+        waitingDialog?.show()
+
         val callback = ResponseCallback<Unit, String>(
                 { onBookCreated(it) },
                 { Log.e("APPLICATION", it) }
@@ -142,7 +156,7 @@ class EditBookActivity : AppCompatActivity() {
     }
 
     private fun onBookCreated(response: ResponseEntity<Unit>) {
-        // TODO: Hide waiting dialog
+        waitingDialog?.hide()
         if (response.getStatusCode() == 201) {
             // TODO: Go to detail page
             Toast.makeText(this, response.getHeader("Location"), Toast.LENGTH_SHORT).show()

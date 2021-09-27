@@ -16,6 +16,7 @@
     <string name="currency_type">幣別</string>
     <string name="submit">提交</string>
     <string name="select_bank_first">請先選擇銀行</string>
+    <string name="please_waiting">請稍後</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>
