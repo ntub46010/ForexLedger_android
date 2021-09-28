@@ -1,7 +1,9 @@
 package com.vincent.forexledger.activity
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -10,6 +12,10 @@ import com.vincent.forexledger.R
 import com.vincent.forexledger.model.bank.BankType
 import com.vincent.forexledger.model.book.CreateBookRequest
 import com.vincent.forexledger.model.exchangerate.CurrencyType
+import com.vincent.forexledger.network.ResponseEntity
+import com.vincent.forexledger.service.BookService
+import com.vincent.forexledger.utils.ResponseCallback
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.content_toolbar.toolbar
 import kotlinx.android.synthetic.main.fragment_edit_book.*
 
@@ -17,9 +23,12 @@ class EditBookActivity : AppCompatActivity() {
 
     private var bankSelectingDialog: AlertDialog? = null
     private var currencySelectingDialogMap: MutableMap<BankType, AlertDialog> = mutableMapOf()
+    private var waitingDialog: Dialog? = null
 
     private var selectedBank: BankType? = null
     private var selectedCurrencyType: CurrencyType? = null
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,16 +95,35 @@ class EditBookActivity : AppCompatActivity() {
         }
     }
 
+    private fun initWaitingDialog() {
+        waitingDialog = Dialog(this).also {
+            it.setContentView(R.layout.dialog_waiting)
+            it.setCancelable(false)
+        }
+    }
+
     private fun createBook() {
         inputBookName.error = null
         inputBank.error = null
         inputCurrencyType.error = null
 
-        if (validateData()) {
-            val bookName = editBookName.text.toString()
-            val request = CreateBookRequest(bookName, selectedBank!!, selectedCurrencyType!!)
-            Toast.makeText(this, request.toString(), Toast.LENGTH_SHORT).show()
+        if (!validateData()) {
+            return
         }
+
+        val bookName = editBookName.text.toString()
+        val request = CreateBookRequest(bookName, selectedBank!!, selectedCurrencyType!!)
+
+        if (waitingDialog == null) {
+            initWaitingDialog()
+        }
+        waitingDialog?.show()
+
+        val callback = ResponseCallback<Unit, String>(
+                { onBookCreated(it) },
+                { Log.e("APPLICATION", it) }
+        );
+        BookService.createBook(request, callback)
     }
 
     private fun validateData(): Boolean {
@@ -125,6 +153,19 @@ class EditBookActivity : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun onBookCreated(response: ResponseEntity<Unit>) {
+        waitingDialog?.hide()
+        if (response.getStatusCode() == 201) {
+            // TODO: Go to detail page
+            Toast.makeText(this, response.getHeader("Location"), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
+        }
+        response.disposables
+                .filterNotNull()
+                .forEach { disposables.add(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
