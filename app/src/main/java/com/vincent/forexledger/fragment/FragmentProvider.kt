@@ -18,5 +18,6 @@ object FragmentProvider {
         return bookListFragment!!
     }
 
-    fun bookDetail(bookId: String): BookDetailFragment = BookDetailFragment.newInstance(bookId)
+    fun editBook() = EditBookFragment.newInstance()
+    fun bookDetail(bookId: String) = BookDetailFragment.newInstance(bookId)
 }
