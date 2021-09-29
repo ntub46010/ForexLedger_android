@@ -19,5 +19,4 @@ object FragmentProvider {
     }
 
     fun editBook() = EditBookFragment.newInstance()
-    fun bookDetail(bookId: String) = BookDetailFragment.newInstance(bookId)
 }

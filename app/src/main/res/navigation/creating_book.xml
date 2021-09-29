@@ -11,7 +11,7 @@
         android:label="EditBookFragment"
         tools:layout="@layout/fragment_edit_book">
         <action
-            android:id="@+id/action_editBookFragment_to_bookDetailFragment"
+            android:id="@+id/toBookDetail"
             app:destination="@id/bookDetailFragment" />
     </fragment>
 
@@ -19,6 +19,11 @@
         android:id="@+id/bookDetailFragment"
         android:name="com.vincent.forexledger.fragment.BookDetailFragment"
         android:label="BookDetailFragment"
-        tools:layout="@layout/fragment_book_detail" />
+        tools:layout="@layout/fragment_book_detail">
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 
 </navigation>

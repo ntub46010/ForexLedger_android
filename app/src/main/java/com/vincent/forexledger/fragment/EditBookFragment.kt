@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.bank.BankType
 import com.vincent.forexledger.model.book.CreateBookRequest
@@ -170,8 +171,8 @@ class EditBookFragment : Fragment() {
     private fun onBookCreated(response: ResponseEntity<Unit>) {
         waitingDialog?.hide()
         if (response.getStatusCode() == 201) {
-            // TODO: Go to detail page
-            Toast.makeText(requireContext(), response.getHeader("Location"), Toast.LENGTH_SHORT).show()
+            val bookId = response.getHeader("Location")!!.substringAfterLast("/")
+            findNavController().navigate(EditBookFragmentDirections.toBookDetail(bookId))
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }

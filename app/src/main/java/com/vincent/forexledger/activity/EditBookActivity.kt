@@ -9,7 +9,5 @@ class EditBookActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_edit_book)
-
-        // TODO: navigation component
     }
 }
