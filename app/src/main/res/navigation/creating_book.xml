@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/creating_book"
+    app:startDestination="@id/editBookFragment">
+
+    <fragment
+        android:id="@+id/editBookFragment"
+        android:name="com.vincent.forexledger.fragment.EditBookFragment"
+        android:label="EditBookFragment"
+        tools:layout="@layout/fragment_edit_book">
+        <action
+            android:id="@+id/action_editBookFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="com.vincent.forexledger.fragment.BookDetailFragment"
+        android:label="BookDetailFragment"
+        tools:layout="@layout/fragment_book_detail" />
+
+</navigation>
