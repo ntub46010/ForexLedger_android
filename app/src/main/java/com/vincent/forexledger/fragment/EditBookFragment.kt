@@ -17,7 +17,6 @@ import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.BookService
 import com.vincent.forexledger.utils.ResponseCallback
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.content_toolbar.toolbar
 import kotlinx.android.synthetic.main.fragment_edit_book.*
 
 class EditBookFragment : Fragment() {
@@ -65,12 +64,8 @@ class EditBookFragment : Fragment() {
     }
 
     private fun initToolbar() {
-        toolbar.title = getString(R.string.create_book)
-
         val activity = requireActivity() as AppCompatActivity
-        activity.setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener { requireActivity().finish() }
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.title = getString(R.string.create_book)
     }
 
     private fun initBankSelectingDialog() {
