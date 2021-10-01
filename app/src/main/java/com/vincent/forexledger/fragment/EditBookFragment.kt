@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.bank.BankType
 import com.vincent.forexledger.model.book.CreateBookRequest
@@ -129,7 +130,7 @@ class EditBookFragment : Fragment() {
 
         val callback = ResponseCallback<Unit, String>(
                 { onBookCreated(it) },
-                { Log.e("APPLICATION", it) }
+                { Log.e(Constants.TAG_APPLICATION, it) }
         );
         BookService.createBook(request, callback)
     }
@@ -166,7 +167,7 @@ class EditBookFragment : Fragment() {
     private fun onBookCreated(response: ResponseEntity<Unit>) {
         waitingDialog?.hide()
         if (response.getStatusCode() == 201) {
-            val bookId = response.getHeader("Location")!!.substringAfterLast("/")
+            val bookId = response.getHeader(Constants.HEADER_LOCATION)!!.substringAfterLast("/")
             findNavController().navigate(EditBookFragmentDirections.toBookDetail(bookId))
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()

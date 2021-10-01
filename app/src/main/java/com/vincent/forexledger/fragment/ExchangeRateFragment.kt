@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vincent.forexledger.Constants
 import com.vincent.forexledger.DataStorage
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.ExchangeRateListAdapter
@@ -78,7 +79,7 @@ class ExchangeRateFragment : Fragment() {
     private fun loadExchangeRates(bank: BankType) {
         val callback = SimpleCallback<ResponseEntity<List<ExchangeRateVO>>, String>(
                 { onExchangeRateReturned(it) },
-                { Log.e("APPLICATION", it) }
+                { Log.e(Constants.TAG_APPLICATION, it) }
         )
         ExchangeRateService.getExchangeRate(bank, callback)
     }
