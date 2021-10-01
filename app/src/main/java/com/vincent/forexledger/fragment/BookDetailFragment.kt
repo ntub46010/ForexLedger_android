@@ -10,6 +10,7 @@ import com.vincent.forexledger.R
 import kotlinx.android.synthetic.main.fragment_book_detail.*
 
 class BookDetailFragment : Fragment() {
+    private lateinit var bookId: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -18,13 +19,10 @@ class BookDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textMsg.text = requireArguments().getString(Constants.KEY_BOOK_ID)
+        val args = BookDetailFragmentArgs.fromBundle(requireArguments())
+        bookId = args.bookId
+        
+        textMsg.text = bookId
     }
 
-    companion object {
-        fun newInstance(bookId: String): BookDetailFragment {
-            val bundle = Bundle().apply { putString(Constants.KEY_BOOK_ID, bookId) }
-            return BookDetailFragment().apply { arguments = bundle }
-        }
-    }
 }
