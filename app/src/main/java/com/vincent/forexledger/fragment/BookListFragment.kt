@@ -70,9 +70,15 @@ class BookListFragment : Fragment() {
         val adapter = listBook.adapter
 
         if (adapter == null) {
-            listBook.adapter = BookListAdapter(books)
+            listBook.adapter = BookListAdapter(books, onBookClickListener())
         } else {
             (adapter as BookListAdapter).refreshData(books)
+        }
+    }
+
+    private fun onBookClickListener() = object : BookListAdapter.OnItemClickListener {
+        override fun onItemClick(book: BookListVO) {
+            Toast.makeText(requireContext(), book.id, Toast.LENGTH_SHORT).show()
         }
     }
 

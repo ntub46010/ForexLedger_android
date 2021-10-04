@@ -1,7 +1,6 @@
 package com.vincent.forexledger.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.utils.FormatUtils
-import java.lang.StringBuilder
-import kotlin.math.abs
 
-class BookListAdapter(var books: List<BookListVO>)
+class BookListAdapter(var books: List<BookListVO>,
+                      val listener: OnItemClickListener)
     : RecyclerView.Adapter<BookListAdapter.BookListViewHolder>() {
 
     override fun getItemCount() = books.size
@@ -60,8 +58,16 @@ class BookListAdapter(var books: List<BookListVO>)
         notifyDataSetChanged()
     }
 
-    inner class BookListViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun getContext(): Context = view.context
+    inner class BookListViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        init {
+            view.setOnClickListener(this)
+        }
+        
+        override fun onClick(view: View) = listener.onItemClick(books[adapterPosition])
+        fun getContext() = view.context!!
     }
 
+    interface OnItemClickListener {
+        fun onItemClick(book: BookListVO)
+    }
 }
