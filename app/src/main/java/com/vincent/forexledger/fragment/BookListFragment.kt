@@ -17,7 +17,9 @@ import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.BookService
 import com.vincent.forexledger.utils.ResponseCallback
+import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.content_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_book_list.*
 import kotlinx.android.synthetic.main.fragment_exchange_rate.swipeRefreshLayout
 
@@ -55,6 +57,9 @@ class BookListFragment : Fragment() {
     }
 
     private fun onBookListReturned(response: ResponseEntity<List<BookListVO>>) {
+        ViewUtils.setInvisible(progressBar)
+        swipeRefreshLayout.isRefreshing = false
+
         if (response.getStatusCode() == 200) {
             displayBooks(response.getBody() ?: emptyList())
         } else {
