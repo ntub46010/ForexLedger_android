@@ -79,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:textSize="@dimen/font_size_3"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/textTWD"
         app:layout_constraintTop_toTopOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textTWD" />
@@ -98,6 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_3"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@id/textProfit"
         app:layout_constraintTop_toTopOf="@id/textPercentage"
         app:layout_constraintBottom_toBottomOf="@id/textPercentage" />

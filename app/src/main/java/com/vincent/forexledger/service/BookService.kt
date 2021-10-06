@@ -1,5 +1,6 @@
 package com.vincent.forexledger.service
 
+import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.model.book.CreateBookRequest
 import com.vincent.forexledger.network.NetworkClient
 import com.vincent.forexledger.utils.ResponseCallback
@@ -14,6 +15,16 @@ object BookService {
         val bookApi = NetworkClient.bookAPI()
         RetrofitUtils.sendRequest(
                 bookApi.createBook(request),
+                callback
+        )
+    }
+
+    fun loadMyBooks(
+            callback: ResponseCallback<List<BookListVO>, String>) {
+
+        val bookApi = NetworkClient.bookAPI()
+        RetrofitUtils.sendRequest(
+                bookApi.loadMyBook(),
                 callback
         )
     }
