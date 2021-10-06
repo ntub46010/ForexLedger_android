@@ -43,7 +43,15 @@ class BookListFragment : Fragment() {
 
         btnCreateBook.setOnClickListener {
             //startActivity(Intent(requireContext(), EditBookActivity::class.java))
-            startActivity(Intent(requireContext(), BookDetailActivity::class.java))
+
+            // FIXME: should implement in on click listener
+            val bundle = Bundle().apply {
+                putString(Constants.KEY_BOOK_ID, "test_book_id")
+                putString(Constants.KEY_BOOK_NAME, "test_book_name")
+            }
+            val intent = Intent(requireContext(), BookDetailActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
 
         getBooks()
