@@ -52,7 +52,6 @@
     <TextView
         android:id="@+id/textProfitRate"
         style="@style/BookInfoCardText"
-        android:text="-1.51"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         app:layout_constraintEnd_toStartOf="@id/textPercentage"
         app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>
@@ -60,7 +59,6 @@
     <TextView
         android:id="@+id/textTWDProfit"
         style="@style/BookInfoCardText"
-        android:text="-359"
         app:layout_constraintEnd_toEndOf="@id/textProfitRate"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
 
@@ -76,7 +74,6 @@
     <TextView
         android:id="@+id/textBreakEvenPointValue"
         style="@style/BookInfoCardText"
-        android:text="38.4210"
         app:layout_constraintStart_toEndOf="@id/textBreakEvenPointLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/textBreakEvenPointLabel"/>

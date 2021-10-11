@@ -34,7 +34,6 @@
         android:id="@+id/textCurrencyType"
         style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
-        android:text="GBP"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/guideline"
         app:layout_constraintBottom_toBottomOf="@id/guideline"/>
@@ -43,7 +42,6 @@
         android:id="@+id/textForeignInvest"
         style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
-        android:text="621.77"
         app:layout_constraintEnd_toStartOf="@id/textCurrencyType"
         app:layout_constraintTop_toTopOf="@id/textCurrencyType"
         app:layout_constraintBottom_toBottomOf="@id/textCurrencyType" />
@@ -61,10 +59,8 @@
         android:id="@+id/textTWDInvest"
         style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
-        android:text="23,877"
         app:layout_constraintEnd_toStartOf="@id/textTWD"
         app:layout_constraintTop_toTopOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

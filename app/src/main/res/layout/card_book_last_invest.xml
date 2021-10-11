@@ -8,7 +8,7 @@
     android:background="@color/brown3">
 
     <TextView
-        android:id="@+id/textCurrentValue"
+        android:id="@+id/textLastInvest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/parent_small_padding"
@@ -34,9 +34,8 @@
         style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:layout_marginTop="@dimen/widget_normal_spacing"
-        android:text="GBP"
         app:layout_constraintEnd_toStartOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/textCurrentValue"/>
+        app:layout_constraintTop_toBottomOf="@id/textLastInvest"/>
 
     <TextView
         android:id="@+id/textTWD"
@@ -47,18 +46,16 @@
         app:layout_constraintTop_toBottomOf="@id/textCurrencyType"/>
 
     <TextView
-        android:id="@+id/textTWDCurrentValue"
+        android:id="@+id/textTWDInvest"
         style="@style/BookInfoCardText"
-        android:text="3,000"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         app:layout_constraintEnd_toStartOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
 
     <TextView
-        android:id="@+id/textBalance"
+        android:id="@+id/textForeignInvest"
         style="@style/BookInfoCardText"
-        android:text="78.44"
-        app:layout_constraintEnd_toEndOf="@id/textTWDCurrentValue"
+        app:layout_constraintEnd_toEndOf="@id/textTWDInvest"
         app:layout_constraintBottom_toBottomOf="@id/textCurrencyType"/>
 
     <TextView
@@ -71,9 +68,8 @@
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
 
     <TextView
-        android:id="@+id/textBuyingRate"
+        android:id="@+id/textSellingRate"
         style="@style/BookInfoCardText"
-        android:text="38.2457"
         app:layout_constraintStart_toEndOf="@id/textExchangeRate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/textExchangeRate"/>
