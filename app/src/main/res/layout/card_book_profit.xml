@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/parent_small_padding"
-        android:text="損益"
+        android:text="@string/profit"
         android:textSize="@dimen/font_size_2"
         android:textColor="@color/black"
         android:background="@color/brown"
@@ -68,7 +68,7 @@
         android:id="@+id/textBreakEvenPointLabel"
         style="@style/BookInfoCardText"
         android:layout_marginStart="@dimen/widget_big_spacing"
-        android:text="損益平衡點"
+        android:text="@string/break_even_point"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>

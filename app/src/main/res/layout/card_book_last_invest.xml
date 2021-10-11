@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/parent_small_padding"
-        android:text="上次投入"
+        android:text="@string/last_invest"
         android:textSize="@dimen/font_size_2"
         android:textColor="@color/black"
         android:background="@color/brown"
@@ -65,7 +65,7 @@
         android:id="@+id/textExchangeRate"
         style="@style/BookInfoCardText"
         android:layout_marginStart="@dimen/widget_big_spacing"
-        android:text="銀行賣匯"
+        android:text="@string/bank_selling_rate"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/textCurrencyType"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
