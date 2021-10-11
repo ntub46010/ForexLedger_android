@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/parent_normal_padding"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/brown3">
 
     <TextView
@@ -31,48 +32,36 @@
 
     <TextView
         android:id="@+id/textCurrencyType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:text="GBP"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/guideline"
         app:layout_constraintBottom_toBottomOf="@id/guideline"/>
 
     <TextView
         android:id="@+id/textForeignInvest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:text="621.77"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/textCurrencyType"
         app:layout_constraintTop_toTopOf="@id/textCurrencyType"
         app:layout_constraintBottom_toBottomOf="@id/textCurrencyType" />
 
     <TextView
         android:id="@+id/textTWD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:text="@string/symbol_twd"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textCurrencyType"
         app:layout_constraintBottom_toBottomOf="@id/textCurrencyType" />
 
     <TextView
         android:id="@+id/textTWDInvest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:text="23,877"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/textTWD"
         app:layout_constraintTop_toTopOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>

@@ -31,13 +31,10 @@
 
     <TextView
         android:id="@+id/textTWD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         android:layout_marginTop="@dimen/widget_normal_spacing"
         android:text="@string/symbol_twd"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/textCurrentValue"/>
 
@@ -54,44 +51,32 @@
 
     <TextView
         android:id="@+id/textProfitRate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:text="-1.51"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         android:layout_marginEnd="@dimen/widget_normal_spacing"
         app:layout_constraintEnd_toStartOf="@id/textPercentage"
         app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>
 
     <TextView
         android:id="@+id/textTWDProfit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:text="-359"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@id/textProfitRate"
         app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
 
     <TextView
         android:id="@+id/textBreakEvenPointLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:layout_marginStart="@dimen/widget_big_spacing"
         android:text="損益平衡點"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/textTWD"
         app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>
 
     <TextView
         android:id="@+id/textBreakEvenPointValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BookInfoCardText"
         android:text="38.4210"
-        android:textSize="@dimen/font_size_2"
-        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/textBreakEvenPointLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/textBreakEvenPointLabel"/>
