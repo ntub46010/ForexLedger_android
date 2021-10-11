@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/widget_normal_spacing"
-    android:background="@color/brown">
+    android:background="@color/brown3">
 
     <TextView
         android:id="@+id/textCurrentValue"
@@ -15,7 +15,7 @@
         android:text="損益"
         android:textSize="@dimen/font_size_2"
         android:textColor="@color/black"
-        android:background="@color/brown1"
+        android:background="@color/brown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -89,7 +89,7 @@
         android:id="@+id/textBreakEvenPointValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="34.8428"
+        android:text="38.4210"
         android:textSize="@dimen/font_size_2"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/textBreakEvenPointLabel"

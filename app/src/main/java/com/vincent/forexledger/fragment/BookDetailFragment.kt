@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
-import kotlinx.android.synthetic.main.fragment_book_detail.*
 
 class BookDetailFragment : Fragment() {
     private lateinit var bookId: String
@@ -21,8 +19,6 @@ class BookDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args = BookDetailFragmentArgs.fromBundle(requireArguments())
         bookId = args.bookId
-        
-        textMsg.text = bookId
     }
 
 }
