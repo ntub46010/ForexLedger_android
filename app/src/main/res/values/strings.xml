@@ -17,6 +17,12 @@
     <string name="submit">提交</string>
     <string name="select_bank_first">請先選擇銀行</string>
     <string name="please_waiting">請稍後</string>
+    <string name="current_value">現值</string>
+    <string name="bank_buying_rate">銀行買匯</string>
+    <string name="bank_selling_rate">銀行賣匯</string>
+    <string name="profit">損益</string>
+    <string name="break_even_point">損益平衡</string>
+    <string name="last_invest">上次投入</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>

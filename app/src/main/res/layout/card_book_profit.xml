@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/widget_normal_spacing"
+    android:background="@color/brown3">
+
+    <TextView
+        android:id="@+id/textCurrentValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/parent_small_padding"
+        android:text="@string/profit"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black"
+        android:background="@color/brown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/guideline"
+        android:layout_width="0.5dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textTWD"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/textTWD"
+        style="@style/BookInfoCardText"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        android:text="@string/symbol_twd"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/textCurrentValue"/>
+
+    <TextView
+        android:id="@+id/textPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/symbol_percentage"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintStart_toStartOf="@id/textTWD"
+        app:layout_constraintTop_toBottomOf="@id/textTWD"/>
+
+    <TextView
+        android:id="@+id/textProfitRate"
+        style="@style/BookInfoCardText"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        app:layout_constraintEnd_toStartOf="@id/textPercentage"
+        app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>
+
+    <TextView
+        android:id="@+id/textTWDProfit"
+        style="@style/BookInfoCardText"
+        app:layout_constraintEnd_toEndOf="@id/textProfitRate"
+        app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
+
+    <TextView
+        android:id="@+id/textBreakEvenPointLabel"
+        style="@style/BookInfoCardText"
+        android:layout_marginStart="@dimen/widget_big_spacing"
+        android:text="@string/break_even_point"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@id/textTWD"
+        app:layout_constraintBottom_toBottomOf="@id/textPercentage"/>
+
+    <TextView
+        android:id="@+id/textBreakEvenPointValue"
+        style="@style/BookInfoCardText"
+        app:layout_constraintStart_toEndOf="@id/textBreakEvenPointLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/textBreakEvenPointLabel"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

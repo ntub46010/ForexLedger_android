@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/widget_normal_spacing"
+    android:background="@color/brown3">
+
+    <TextView
+        android:id="@+id/textCurrentValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/parent_small_padding"
+        android:text="@string/current_value"
+        android:textSize="@dimen/font_size_2"
+        android:textColor="@color/black"
+        android:background="@color/brown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/guideline"
+        android:layout_width="0.5dp"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textCurrencyType"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/textCurrencyType"
+        style="@style/BookInfoCardText"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/textCurrentValue"/>
+
+    <TextView
+        android:id="@+id/textTWD"
+        style="@style/BookInfoCardText"
+        android:text="@string/symbol_twd"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintEnd_toEndOf="@id/textCurrencyType"
+        app:layout_constraintTop_toBottomOf="@id/textCurrencyType"/>
+
+    <TextView
+        android:id="@+id/textTWDCurrentValue"
+        style="@style/BookInfoCardText"
+        android:layout_marginEnd="@dimen/widget_normal_spacing"
+        app:layout_constraintEnd_toStartOf="@id/textTWD"
+        app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
+
+    <TextView
+        android:id="@+id/textBalance"
+        style="@style/BookInfoCardText"
+        app:layout_constraintEnd_toEndOf="@id/textTWDCurrentValue"
+        app:layout_constraintBottom_toBottomOf="@id/textCurrencyType"/>
+
+    <TextView
+        android:id="@+id/textExchangeRate"
+        style="@style/BookInfoCardText"
+        android:layout_marginStart="@dimen/widget_big_spacing"
+        android:text="@string/bank_buying_rate"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@id/textCurrencyType"
+        app:layout_constraintBottom_toBottomOf="@id/textTWD"/>
+
+    <TextView
+        android:id="@+id/textBuyingRate"
+        style="@style/BookInfoCardText"
+        app:layout_constraintStart_toEndOf="@id/textExchangeRate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/textExchangeRate"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

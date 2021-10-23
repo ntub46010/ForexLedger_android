@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="@dimen/parent_normal_padding">
 
-    <TextView
-        android:id="@+id/textMsg"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/layoutCurrentValue"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+        <include layout="@layout/card_book_current_value" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/layoutProfit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutCurrentValue">
+        <include layout="@layout/card_book_profit"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/layoutLastInvest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_normal_spacing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutProfit">
+        <include layout="@layout/card_book_last_invest"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

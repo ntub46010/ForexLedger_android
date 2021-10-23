@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
+import com.vincent.forexledger.activity.BookDetailActivity
 import com.vincent.forexledger.activity.EditBookActivity
 import com.vincent.forexledger.adapter.BookListAdapter
 import com.vincent.forexledger.model.book.BookListVO
@@ -41,7 +42,16 @@ class BookListFragment : Fragment() {
         listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         btnCreateBook.setOnClickListener {
-            startActivity(Intent(requireContext(), EditBookActivity::class.java))
+            //startActivity(Intent(requireContext(), EditBookActivity::class.java))
+
+            // FIXME: should implement in on click listener
+            val bundle = Bundle().apply {
+                putString(Constants.KEY_BOOK_ID, "test_book_id")
+                putString(Constants.KEY_BOOK_NAME, "test_book_name")
+            }
+            val intent = Intent(requireContext(), BookDetailActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
 
         getBooks()
