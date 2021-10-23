@@ -21,9 +21,8 @@
     <string name="bank_buying_rate">銀行買匯</string>
     <string name="bank_selling_rate">銀行賣匯</string>
     <string name="profit">損益</string>
-    <string name="break_even_point">損益平衡點</string>
+    <string name="break_even_point">損益平衡</string>
     <string name="last_invest">上次投入</string>
-    <string name="total_invest">總投入</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>

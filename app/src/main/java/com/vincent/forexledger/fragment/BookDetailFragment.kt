@@ -25,7 +25,6 @@ class BookDetailFragment : Fragment() {
         displayCurrentValueCard()
         displayProfitCard()
         displayLastInvestCard()
-        displayTotalInvestCard()
     }
 
     private fun displayCurrentValueCard() {
@@ -51,14 +50,6 @@ class BookDetailFragment : Fragment() {
             findViewById<TextView>(R.id.textCurrencyType).text = "GBP"
             findViewById<TextView>(R.id.textTWDInvest).text = "3,000"
             findViewById<TextView>(R.id.textSellingRate).text = 38.2457.toString()
-        }
-    }
-
-    private fun displayTotalInvestCard() {
-        with (layoutTotalInvest) {
-            findViewById<TextView>(R.id.textForeignInvest).text = 621.77.toString()
-            findViewById<TextView>(R.id.textCurrencyType).text = "GBP"
-            findViewById<TextView>(R.id.textTWDInvest).text = "23,877"
         }
     }
 

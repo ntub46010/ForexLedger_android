@@ -38,15 +38,4 @@
         <include layout="@layout/card_book_last_invest"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/layoutTotalInvest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/widget_normal_spacing"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutLastInvest">
-        <include layout="@layout/card_book_total_invest"/>
-    </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
