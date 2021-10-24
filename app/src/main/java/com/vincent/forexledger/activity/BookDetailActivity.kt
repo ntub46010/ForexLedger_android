@@ -21,7 +21,12 @@ class BookDetailActivity : AppCompatActivity() {
         super.onStart()
         
         val bookId = intent.getStringExtra(Constants.KEY_BOOK_ID)!!
-        val bundle = Bundle().apply { putString(Constants.KEY_BOOK_ID, bookId) }
+        val bookName = intent.getStringExtra(Constants.KEY_BOOK_NAME)!!
+
+        val bundle = Bundle().apply {
+            putString(Constants.KEY_BOOK_ID, bookId)
+            putString(Constants.KEY_BOOK_NAME, bookName)
+        }
         findNavController(R.id.layout_navigation_container)
             .setGraph(R.navigation.browsing_book, bundle)
     }

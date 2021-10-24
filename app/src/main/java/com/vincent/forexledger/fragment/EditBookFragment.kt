@@ -129,7 +129,7 @@ class EditBookFragment : Fragment() {
         waitingDialog?.show()
 
         val callback = ResponseCallback<Unit, String>(
-                { onBookCreated(it) },
+                { onBookCreated(it, bookName) },
                 { Log.e(Constants.TAG_APPLICATION, it) }
         );
         BookService.createBook(request, callback)
@@ -164,11 +164,11 @@ class EditBookFragment : Fragment() {
         return isValid
     }
 
-    private fun onBookCreated(response: ResponseEntity<Unit>) {
+    private fun onBookCreated(response: ResponseEntity<Unit>, bookName: String) {
         waitingDialog?.hide()
         if (response.getStatusCode() == 201) {
             val bookId = response.getHeader(Constants.HEADER_LOCATION)!!.substringAfterLast("/")
-            findNavController().navigate(EditBookFragmentDirections.toBookDetail(bookId))
+            findNavController().navigate(EditBookFragmentDirections.toBookDetail(bookId, bookName))
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }
