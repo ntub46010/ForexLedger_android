@@ -10,7 +10,7 @@ data class BookDetailVO(var id: String,
                         var twdProfit: Int?,
                         var twdProfitRate: Double?,
                         var breakEvenPoint: Double?,
-                        var lastForeignIngest: Double?,
+                        var lastForeignInvest: Double?,
                         var lastTwdInvest: Int?,
                         var lastSellingRate: Double?) {
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
@@ -31,8 +32,15 @@ class BookDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args = BookDetailFragmentArgs.fromBundle(requireArguments())
         bookId = args.bookId
+        initToolbar(args.bookName)
 
         getBook()
+    }
+
+    private fun initToolbar(bookName: String?) {
+        bookName?.let {
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = it
+        }
     }
 
     private fun getBook() {
@@ -83,7 +91,7 @@ class BookDetailFragment : Fragment() {
 
     private fun displayLastInvestCard(book: BookDetailVO) {
         with (layoutLastInvest) {
-            findViewById<TextView>(R.id.textForeignInvest).text = book.lastForeignIngest?.toString() ?: "-"
+            findViewById<TextView>(R.id.textForeignInvest).text = book.lastForeignInvest?.toString() ?: "-"
             findViewById<TextView>(R.id.textCurrencyType).text = book.currencyType.name
             findViewById<TextView>(R.id.textTWDInvest).text = book.lastTwdInvest?.toString() ?: "-"
             findViewById<TextView>(R.id.textSellingRate).text = book.lastSellingRate?.toString() ?: "-"
