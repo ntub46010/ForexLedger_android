@@ -42,16 +42,7 @@ class BookListFragment : Fragment() {
         listBook.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         btnCreateBook.setOnClickListener {
-            //startActivity(Intent(requireContext(), EditBookActivity::class.java))
-
-            // FIXME: should implement in on click listener
-            val bundle = Bundle().apply {
-                putString(Constants.KEY_BOOK_ID, "test_book_id")
-                putString(Constants.KEY_BOOK_NAME, "test_book_name")
-            }
-            val intent = Intent(requireContext(), BookDetailActivity::class.java)
-            intent.putExtras(bundle)
-            startActivity(intent)
+            startActivity(Intent(requireContext(), EditBookActivity::class.java))
         }
 
         getBooks()
@@ -93,7 +84,13 @@ class BookListFragment : Fragment() {
 
     private fun onBookClickListener() = object : BookListAdapter.OnItemClickListener {
         override fun onItemClick(book: BookListVO) {
-            Toast.makeText(requireContext(), book.id, Toast.LENGTH_SHORT).show()
+            val bundle = Bundle().apply {
+                putString(Constants.KEY_BOOK_ID, book.id)
+                putString(Constants.KEY_BOOK_NAME, book.name)
+            }
+            val intent = Intent(requireContext(), BookDetailActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
     }
 
