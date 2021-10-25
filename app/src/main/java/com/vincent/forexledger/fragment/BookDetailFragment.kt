@@ -31,8 +31,13 @@ class BookDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = BookDetailFragmentArgs.fromBundle(requireArguments())
+
         bookId = args.bookId
         initToolbar(args.bookName)
+
+        btnCreateEntry.setOnClickListener {
+            Toast.makeText(requireContext(), "btnCreateEntry", Toast.LENGTH_SHORT).show()
+        }
 
         getBook()
     }
