@@ -47,6 +47,12 @@
     <string name="currency_sek">瑞典幣</string>
     <string name="currency_thb">泰國銖</string>
 
+    <string name="transaction_type_transfer_in_from_twd">從臺幣轉入</string>
+    <string name="transaction_type_transfer_in_from_foreign">從外幣轉入</string>
+    <string name="transaction_type_transfer_in_from_interest">利息收入</string>
+    <string name="transaction_type_transfer_out_to_twd">轉出為臺幣</string>
+    <string name="transaction_type_transfer_out_to_foreign">轉出為外幣</string>
+
     <string name="bank_fubon">富邦銀行</string>
     <string name="bank_richart">Richart</string>
 
