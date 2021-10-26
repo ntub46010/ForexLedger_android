@@ -1,10 +1,12 @@
 package com.vincent.forexledger.utils
 
 import java.text.NumberFormat
-import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.*
 
 object FormatUtils {
     private val moneyFormat = NumberFormat.getNumberInstance(Locale.US)
+    private val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.TAIWAN)
 
     fun formatDecimalPlaces(number: Double, place: Int): String =
             String.format(Locale.US, "%.${place}f", number)
@@ -12,4 +14,12 @@ object FormatUtils {
     fun formatMoney(amount: Int): String = moneyFormat.format(amount)
 
     fun formatMoney(amount: Double): String = moneyFormat.format(amount)
+
+    fun formatDateStr(year: Int, month: Int, dayOfMonth: Int): String {
+        // month starts with 0
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, dayOfMonth)
+
+        return dateFormat.format(calendar.time)
+    }
 }
