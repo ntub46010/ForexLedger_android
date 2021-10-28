@@ -17,6 +17,7 @@ import java.util.*
 class CreateEntryFragment : Fragment() {
     private var entryTypeSelectingDialog: AlertDialog? = null
     private var anotherBookSelectingDialog: AlertDialog? = null
+    private var transactionDatePickerDialog: DatePickerDialog? = null
 
     private var selectedEntryType: TransactionType? = null
 
@@ -31,7 +32,9 @@ class CreateEntryFragment : Fragment() {
             (entryTypeSelectingDialog ?: initEntryTypeSelectingDialog()).show()
         }
 
-        editTransactionDate.setOnClickListener(editTransactionDateOnClickListener())
+        editTransactionDate.setOnClickListener {
+            (transactionDatePickerDialog ?: initTransactionDateSelectingDialog()).show()
+        }
 
         checkSyncToAnotherBook.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
@@ -76,19 +79,15 @@ class CreateEntryFragment : Fragment() {
             .also { anotherBookSelectingDialog = it }
     }
 
-    private fun editTransactionDateOnClickListener(): View.OnClickListener {
-        return View.OnClickListener {
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(
-                    requireContext(), transactionDateSelectedListener(),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-    }
-
-    private fun transactionDateSelectedListener(): DatePickerDialog.OnDateSetListener {
-        return DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
+    private fun initTransactionDateSelectingDialog(): DatePickerDialog {
+        val onSelectedListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
             editTransactionDate.setText(FormatUtils.formatDateStr(year, month, dayOfMonth))
         }
+
+        val calendar = Calendar.getInstance()
+        return DatePickerDialog(
+                requireContext(), onSelectedListener,
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+        ).also { transactionDatePickerDialog = it }
     }
 }
