@@ -49,6 +49,43 @@ class CreateEntryFragment : Fragment() {
         }
     }
 
+    private fun validateData(): Boolean {
+        inputTransactionType.error = null
+        inputTransactionDate.error = null
+        inputForeignAmount.error = null
+        inputTwdAmount.error = null
+        inputBookName.error = null
+        var isValid = true
+
+        if (selectedEntryType == null) {
+            inputTransactionType.error = requireContext().getString(R.string.error_should_select_one)
+            isValid = false
+        }
+
+        if (editTransactionDate.text.isNullOrEmpty()) {
+            inputTransactionDate.error = requireContext().getString(R.string.error_should_not_be_empty)
+            isValid = false
+        }
+
+        if (editForeignAmount.text.isNullOrEmpty()) {
+            inputForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
+            isValid = false
+        }
+
+        if (selectedEntryType != TransactionType.TRANSFER_IN_FROM_INTEREST
+                && editTwdAmount.text.isNullOrEmpty()) {
+            inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
+            isValid = false
+        }
+
+        if (checkSyncToAnotherBook.isChecked && editBookName.text.isNullOrEmpty()) {
+            inputBookName.error = requireContext().getString(R.string.error_should_select_one)
+            isValid = false
+        }
+
+        return isValid
+    }
+
     private fun initEntryTypeSelectingDialog(): AlertDialog {
         val entryTypes = TransactionType.values();
         val entryTypeLocalNames = entryTypes.map { requireContext().getString(it.localNameResource) }.toTypedArray()

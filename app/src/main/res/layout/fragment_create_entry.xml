@@ -59,7 +59,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editForeignAmount"
-                style="@style/EditText" />
+                style="@style/EditText"
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,7 +74,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTwdAmount"
-                style="@style/EditText" />
+                style="@style/EditText"
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
