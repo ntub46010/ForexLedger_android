@@ -15,11 +15,5 @@ object FormatUtils {
 
     fun formatMoney(amount: Double): String = moneyFormat.format(amount)
 
-    fun formatDateStr(year: Int, month: Int, dayOfMonth: Int): String {
-        // month starts with 0
-        val calendar = Calendar.getInstance()
-        calendar.set(year, month, dayOfMonth)
-
-        return dateFormat.format(calendar.time)
-    }
+    fun formatDateStr(date: Date): String = dateFormat.format(date)
 }

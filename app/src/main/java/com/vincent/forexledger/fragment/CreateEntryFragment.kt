@@ -2,12 +2,12 @@ package com.vincent.forexledger.fragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.vincent.forexledger.R
+import com.vincent.forexledger.model.entry.CreateEntryRequest
 import com.vincent.forexledger.model.entry.TransactionType
 import com.vincent.forexledger.utils.FormatUtils
 import com.vincent.forexledger.utils.ViewUtils
@@ -19,7 +19,10 @@ class CreateEntryFragment : Fragment() {
     private var anotherBookSelectingDialog: AlertDialog? = null
     private var transactionDatePickerDialog: DatePickerDialog? = null
 
+    private lateinit var bookId: String
     private var selectedEntryType: TransactionType? = null
+    private var selectedTransactionDate: Date? = null
+    private var selectedAnotherBookId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_create_entry, container, false)
@@ -47,6 +50,23 @@ class CreateEntryFragment : Fragment() {
         editBookName.setOnClickListener {
             (anotherBookSelectingDialog ?: initAnotherBookSelectingDialog()).show()
         }
+    }
+
+    private fun createEntry() {
+        if (!validateData()) {
+            return
+        }
+
+        val request = CreateEntryRequest(
+                bookId, // TODO
+                selectedEntryType!!,
+                selectedTransactionDate!!,
+                editForeignAmount.text.toString().toDouble(),
+                editTwdAmount.text.toString().toDoubleOrNull(),
+                selectedAnotherBookId // TODO
+        )
+
+        Toast.makeText(requireContext(), request.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun validateData(): Boolean {
@@ -117,14 +137,31 @@ class CreateEntryFragment : Fragment() {
     }
 
     private fun initTransactionDateSelectingDialog(): DatePickerDialog {
+        val calendar = Calendar.getInstance()
+
         val onSelectedListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-            editTransactionDate.setText(FormatUtils.formatDateStr(year, month, dayOfMonth))
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            selectedTransactionDate = calendar.time
+            editTransactionDate.setText(FormatUtils.formatDateStr(selectedTransactionDate!!))
         }
 
-        val calendar = Calendar.getInstance()
         return DatePickerDialog(
                 requireContext(), onSelectedListener,
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
         ).also { transactionDatePickerDialog = it }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_submit) {
+            createEntry()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.edit_page_actions, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }
