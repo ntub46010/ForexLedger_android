@@ -48,6 +48,7 @@ class CreateEntryFragment : Fragment() {
         }
 
         checkSyncToAnotherBook.setOnCheckedChangeListener { compoundButton, isChecked ->
+            selectedAnotherBookId = null
             if (isChecked) {
                 ViewUtils.setVisible(inputBookName)
             } else {
@@ -65,14 +66,13 @@ class CreateEntryFragment : Fragment() {
             return
         }
 
-        // FIXME: reset another boot info
         val request = CreateEntryRequest(
                 bookId,
                 selectedEntryType!!,
                 selectedTransactionDate!!,
                 editForeignAmount.text.toString().toDouble(),
                 editTwdAmount.text.toString().toDoubleOrNull(),
-                selectedAnotherBookId // TODO
+                selectedAnotherBookId
         )
 
         Toast.makeText(requireContext(), request.toString(), Toast.LENGTH_SHORT).show()
@@ -123,6 +123,7 @@ class CreateEntryFragment : Fragment() {
                 selectedEntryType = entryTypes[position]
                 editTransactionType.setText(entryTypeLocalNames[position])
 
+                selectedAnotherBookId = null
                 if (selectedEntryType!!.isRelatedToAnotherBook) {
                     ViewUtils.setVisible(checkSyncToAnotherBook)
                 } else {
@@ -131,6 +132,7 @@ class CreateEntryFragment : Fragment() {
 
                 if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_INTEREST) {
                     ViewUtils.setInvisible(inputTwdAmount)
+                    editTwdAmount.text?.clear()
                 } else {
                     ViewUtils.setVisible(inputTwdAmount)
                 }
@@ -144,6 +146,7 @@ class CreateEntryFragment : Fragment() {
         val bookNames = listOf("AAA", "BBB", "CCC").toTypedArray()
         val builder = AlertDialog.Builder(requireContext()).setItems(bookNames) { dialog, position ->
             // TODO: record selected book
+            selectedAnotherBookId = bookNames[position] + " id"
             editBookName.setText(bookNames[position])
         }
 
