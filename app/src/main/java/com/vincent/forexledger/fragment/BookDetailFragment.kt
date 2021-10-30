@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.book.BookDetailVO
@@ -36,7 +37,7 @@ class BookDetailFragment : Fragment() {
         initToolbar(args.bookName)
 
         btnCreateEntry.setOnClickListener {
-            Toast.makeText(requireContext(), "btnCreateEntry", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(BookDetailFragmentDirections.toCreateEntry(bookId))
         }
 
         getBook()

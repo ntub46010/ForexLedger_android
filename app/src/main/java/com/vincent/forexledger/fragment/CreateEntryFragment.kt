@@ -30,6 +30,9 @@ class CreateEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args = CreateEntryFragmentArgs.fromBundle(requireArguments())
+
+        bookId = args.bookId
 
         editTransactionType.setOnClickListener {
             (entryTypeSelectingDialog ?: initEntryTypeSelectingDialog()).show()
@@ -58,7 +61,7 @@ class CreateEntryFragment : Fragment() {
         }
 
         val request = CreateEntryRequest(
-                bookId, // TODO
+                bookId,
                 selectedEntryType!!,
                 selectedTransactionDate!!,
                 editForeignAmount.text.toString().toDouble(),

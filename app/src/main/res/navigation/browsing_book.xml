@@ -17,6 +17,19 @@
             android:name="bookName"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/toCreateEntry"
+            app:destination="@id/createEntryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEntryFragment"
+        android:name="com.vincent.forexledger.fragment.CreateEntryFragment"
+        android:label="CreateEntryFragment">
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
 </navigation>
