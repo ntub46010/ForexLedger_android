@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.entry.CreateEntryRequest
@@ -30,9 +31,13 @@ class CreateEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        super.setHasOptionsMenu(true)
         val args = CreateEntryFragmentArgs.fromBundle(requireArguments())
 
         bookId = args.bookId
+
+        initToolbar()
+        ViewUtils.setInvisible(checkSyncToAnotherBook, inputBookName)
 
         editTransactionType.setOnClickListener {
             (entryTypeSelectingDialog ?: initEntryTypeSelectingDialog()).show()
@@ -44,9 +49,9 @@ class CreateEntryFragment : Fragment() {
 
         checkSyncToAnotherBook.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
-                ViewUtils.setVisible(editBookName)
+                ViewUtils.setVisible(inputBookName)
             } else {
-                ViewUtils.setInvisible(editBookName)
+                ViewUtils.setInvisible(inputBookName)
             }
         }
 
@@ -60,6 +65,7 @@ class CreateEntryFragment : Fragment() {
             return
         }
 
+        // FIXME: reset another boot info
         val request = CreateEntryRequest(
                 bookId,
                 selectedEntryType!!,
@@ -120,7 +126,13 @@ class CreateEntryFragment : Fragment() {
                 if (selectedEntryType!!.isRelatedToAnotherBook) {
                     ViewUtils.setVisible(checkSyncToAnotherBook)
                 } else {
-                    ViewUtils.setInvisible(checkSyncToAnotherBook, editBookName)
+                    ViewUtils.setInvisible(checkSyncToAnotherBook, inputBookName)
+                }
+
+                if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_INTEREST) {
+                    ViewUtils.setInvisible(inputTwdAmount)
+                } else {
+                    ViewUtils.setVisible(inputTwdAmount)
                 }
             }
 
@@ -156,6 +168,11 @@ class CreateEntryFragment : Fragment() {
         ).also { transactionDatePickerDialog = it }
     }
 
+    private fun initToolbar() {
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.title = requireContext().getString(R.string.create_transaction)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_submit) {
             createEntry()
@@ -167,4 +184,5 @@ class CreateEntryFragment : Fragment() {
         inflater.inflate(R.menu.edit_page_actions, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 }

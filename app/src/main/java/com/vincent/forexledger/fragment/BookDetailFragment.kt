@@ -18,6 +18,7 @@ import com.vincent.forexledger.service.BookService
 import com.vincent.forexledger.utils.ResponseCallback
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_book_detail.*
+import java.math.BigDecimal
 
 class BookDetailFragment : Fragment() {
     private val disposables = CompositeDisposable()
@@ -88,7 +89,10 @@ class BookDetailFragment : Fragment() {
             if (book.twdProfitRate == null) {
                 findViewById<TextView>(R.id.textProfitRate).text = "-"
             } else {
-                findViewById<TextView>(R.id.textProfitRate).text = (book.twdProfitRate!! * 100).toString()
+                findViewById<TextView>(R.id.textProfitRate).text = BigDecimal.valueOf(book.twdProfitRate!!)
+                        .multiply(BigDecimal.valueOf(100))
+                        .toDouble()
+                        .toString()
             }
 
             findViewById<TextView>(R.id.textBreakEvenPointValue).text = book.breakEvenPoint?.toString() ?: "-"
