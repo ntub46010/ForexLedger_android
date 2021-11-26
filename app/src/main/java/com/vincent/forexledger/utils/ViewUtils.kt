@@ -12,4 +12,8 @@ object ViewUtils {
 
     fun clearText(vararg views: EditText?) =
             views.forEach { it?.text?.clear() }
+
+    fun isEmpty(editText: EditText) = editText.text.isNullOrEmpty()
+
+    fun toDouble(editText: EditText) = editText.text.toString().toDouble()
 }

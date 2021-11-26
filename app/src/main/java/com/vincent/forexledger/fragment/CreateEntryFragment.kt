@@ -2,16 +2,24 @@ package com.vincent.forexledger.fragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
+import com.vincent.forexledger.model.book.BookListVO
 import com.vincent.forexledger.model.entry.CreateEntryRequest
 import com.vincent.forexledger.model.entry.TransactionType
+import com.vincent.forexledger.network.ResponseEntity
+import com.vincent.forexledger.service.BookService
 import com.vincent.forexledger.utils.FormatUtils
+import com.vincent.forexledger.utils.ResponseCallback
 import com.vincent.forexledger.utils.ViewUtils
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.content_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_create_entry.*
 import java.util.*
 
@@ -22,10 +30,13 @@ class CreateEntryFragment : Fragment() {
 
     private lateinit var bookId: String
     private var balance: Double = Double.MIN_VALUE
+    private lateinit var myBooks: List<BookListVO>
 
     private var selectedEntryType: TransactionType? = null
     private var selectedTransactionDate: Date? = null
-    private var selectedRelatedBookId: String? = null
+    private var selectedRelatedBook: BookListVO? = null
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_create_entry, container, false)
@@ -40,7 +51,8 @@ class CreateEntryFragment : Fragment() {
         balance = args.balance
 
         initToolbar()
-        ViewUtils.setInvisible(checkSyncToRelatedBook, inputRelatedBookName)
+        ViewUtils.setInvisible(checkSyncToRelatedBook, inputRelatedBookName, layoutForm)
+        ViewUtils.setVisible(progressBar)
 
         editTransactionType.setOnClickListener {
             (entryTypeSelectingDialog ?: initEntryTypeSelectingDialog()).show()
@@ -51,13 +63,15 @@ class CreateEntryFragment : Fragment() {
         }
 
         checkSyncToRelatedBook.setOnCheckedChangeListener { compoundButton, isChecked ->
-            selectedRelatedBookId = null
+            selectedRelatedBook = null
             resetWidgetByRelatingBook(isChecked)
         }
 
         editRelatedBookName.setOnClickListener {
             (relatedBookSelectingDialog ?: initRelatedBookSelectingDialog()).show()
         }
+
+        getBooks()
     }
 
     private fun createEntry() {
@@ -71,7 +85,7 @@ class CreateEntryFragment : Fragment() {
                 selectedTransactionDate!!,
                 editForeignAmount.text.toString().toDouble(),
                 editTwdAmount.text.toString().toIntOrNull(),
-                selectedRelatedBookId,
+                selectedRelatedBook?.id,
                 editRelatedForeignAmount.text.toString().toDoubleOrNull()
         )
 
@@ -92,18 +106,18 @@ class CreateEntryFragment : Fragment() {
             isValid = false
         }
 
-        if (editTransactionDate.text.isNullOrEmpty()) {
+        if (ViewUtils.isEmpty(editTransactionDate)) {
             inputTransactionDate.error = requireContext().getString(R.string.error_should_not_be_empty)
             isValid = false
         }
 
-        if (editForeignAmount.text.isNullOrEmpty()) {
+        if (ViewUtils.isEmpty(editForeignAmount)) {
             inputForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
             isValid = false
         } else if (selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD
                 || selectedEntryType == TransactionType.TRANSFER_OUT_TO_FOREIGN
                 || selectedEntryType == TransactionType.TRANSFER_OUT_TO_OTHER) {
-            val foreignAmount = editForeignAmount.text.toString().toDouble()
+            val foreignAmount = ViewUtils.toDouble(editForeignAmount)
             if (foreignAmount < balance) {
                 inputForeignAmount.error = requireContext().getString(R.string.error_this_book_is_insufficient)
                 isValid = false
@@ -112,7 +126,7 @@ class CreateEntryFragment : Fragment() {
 
         if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_TWD
                 || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD) {
-            if (editTwdAmount.text.isNullOrEmpty()) {
+            if (ViewUtils.isEmpty(editTwdAmount)) {
                 inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
             }
@@ -120,12 +134,16 @@ class CreateEntryFragment : Fragment() {
 
         if (selectedEntryType?.isRelatedToAnotherBook == true
                 && checkSyncToRelatedBook.isChecked) {
-            if (editRelatedBookName.text.isNullOrEmpty()) {
+            if (ViewUtils.isEmpty(editRelatedBookName)) {
                 inputRelatedBookName.error = requireContext().getString(R.string.error_should_select_one)
                 isValid = false
             }
-            if (editRelatedForeignAmount.text.isNullOrEmpty()) {
+            if (ViewUtils.isEmpty(editRelatedForeignAmount)) {
                 inputRelatedForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
+                isValid = false
+            } else if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_FOREIGN
+                    && ViewUtils.toDouble(editRelatedForeignAmount) < ViewUtils.toDouble(editForeignAmount)) {
+                inputRelatedForeignAmount.error = requireContext().getString(R.string.error_related_book_is_insufficient)
                 isValid = false
             }
         }
@@ -148,11 +166,12 @@ class CreateEntryFragment : Fragment() {
     }
 
     private fun initRelatedBookSelectingDialog(): AlertDialog {
-        val bookNames = listOf("AAA", "BBB", "CCC").toTypedArray()
-        val builder = AlertDialog.Builder(requireContext()).setItems(bookNames) { dialog, position ->
-            // TODO: record selected book
-            selectedRelatedBookId = bookNames[position] + " id"
-            editRelatedBookName.setText(bookNames[position])
+        val bookLabels = myBooks
+                .map { "${it.name} (${FormatUtils.formatMoney(it.balance)} ${it.currencyType.name})" }
+                .toTypedArray()
+        val builder = AlertDialog.Builder(requireContext()).setItems(bookLabels) { dialog, position ->
+            selectedRelatedBook = myBooks[position]
+            editRelatedBookName.setText(myBooks[position].name)
         }
 
         return builder.create()
@@ -221,6 +240,26 @@ class CreateEntryFragment : Fragment() {
         }
     }
 
+    private fun getBooks() {
+        val callback = ResponseCallback<List<BookListVO>, String>(
+                { onBookListReturned(it) },
+                { Log.e(Constants.TAG_APPLICATION, it) }
+        )
+
+        BookService.loadMyBooks(callback)
+    }
+
+    private fun onBookListReturned(response: ResponseEntity<List<BookListVO>>) {
+        ViewUtils.setInvisible(progressBar)
+        ViewUtils.setVisible(layoutForm)
+
+        if (response.getStatusCode() == 200) {
+            myBooks = response.getBody() ?: emptyList()
+        } else {
+            Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_submit) {
             createEntry()
@@ -233,4 +272,8 @@ class CreateEntryFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
+    }
 }
