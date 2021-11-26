@@ -21,6 +21,8 @@ class CreateEntryFragment : Fragment() {
     private var transactionDatePickerDialog: DatePickerDialog? = null
 
     private lateinit var bookId: String
+    private var balance: Double = Double.MIN_VALUE
+
     private var selectedEntryType: TransactionType? = null
     private var selectedTransactionDate: Date? = null
     private var selectedRelatedBookId: String? = null
@@ -35,6 +37,7 @@ class CreateEntryFragment : Fragment() {
         val args = CreateEntryFragmentArgs.fromBundle(requireArguments())
 
         bookId = args.bookId
+        balance = args.balance
 
         initToolbar()
         ViewUtils.setInvisible(checkSyncToRelatedBook, inputRelatedBookName)
@@ -97,6 +100,14 @@ class CreateEntryFragment : Fragment() {
         if (editForeignAmount.text.isNullOrEmpty()) {
             inputForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
             isValid = false
+        } else if (selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD
+                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_FOREIGN
+                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_OTHER) {
+            val foreignAmount = editForeignAmount.text.toString().toDouble()
+            if (foreignAmount < balance) {
+                inputForeignAmount.error = requireContext().getString(R.string.error_this_book_is_insufficient)
+                isValid = false
+            }
         }
 
         if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_TWD
