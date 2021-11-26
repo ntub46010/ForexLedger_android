@@ -17,13 +17,13 @@ import java.util.*
 
 class CreateEntryFragment : Fragment() {
     private var entryTypeSelectingDialog: AlertDialog? = null
-    private var anotherBookSelectingDialog: AlertDialog? = null
+    private var relatedBookSelectingDialog: AlertDialog? = null
     private var transactionDatePickerDialog: DatePickerDialog? = null
 
     private lateinit var bookId: String
     private var selectedEntryType: TransactionType? = null
     private var selectedTransactionDate: Date? = null
-    private var selectedAnotherBookId: String? = null
+    private var selectedRelatedBookId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_create_entry, container, false)
@@ -37,7 +37,7 @@ class CreateEntryFragment : Fragment() {
         bookId = args.bookId
 
         initToolbar()
-        ViewUtils.setInvisible(checkSyncToAnotherBook, inputBookName)
+        ViewUtils.setInvisible(checkSyncToRelatedBook, inputRelatedBookName)
 
         editTransactionType.setOnClickListener {
             (entryTypeSelectingDialog ?: initEntryTypeSelectingDialog()).show()
@@ -47,17 +47,13 @@ class CreateEntryFragment : Fragment() {
             (transactionDatePickerDialog ?: initTransactionDateSelectingDialog()).show()
         }
 
-        checkSyncToAnotherBook.setOnCheckedChangeListener { compoundButton, isChecked ->
-            selectedAnotherBookId = null
-            if (isChecked) {
-                ViewUtils.setVisible(inputBookName)
-            } else {
-                ViewUtils.setInvisible(inputBookName)
-            }
+        checkSyncToRelatedBook.setOnCheckedChangeListener { compoundButton, isChecked ->
+            selectedRelatedBookId = null
+            resetWidgetByRelatingBook(isChecked)
         }
 
-        editBookName.setOnClickListener {
-            (anotherBookSelectingDialog ?: initAnotherBookSelectingDialog()).show()
+        editRelatedBookName.setOnClickListener {
+            (relatedBookSelectingDialog ?: initRelatedBookSelectingDialog()).show()
         }
     }
 
@@ -65,14 +61,15 @@ class CreateEntryFragment : Fragment() {
         if (!validateData()) {
             return
         }
-
+        
         val request = CreateEntryRequest(
                 bookId,
                 selectedEntryType!!,
                 selectedTransactionDate!!,
                 editForeignAmount.text.toString().toDouble(),
-                editTwdAmount.text.toString().toDoubleOrNull(),
-                selectedAnotherBookId
+                editTwdAmount.text.toString().toIntOrNull(),
+                selectedRelatedBookId,
+                editRelatedForeignAmount.text.toString().toDoubleOrNull()
         )
 
         Toast.makeText(requireContext(), request.toString(), Toast.LENGTH_SHORT).show()
@@ -83,7 +80,8 @@ class CreateEntryFragment : Fragment() {
         inputTransactionDate.error = null
         inputForeignAmount.error = null
         inputTwdAmount.error = null
-        inputBookName.error = null
+        inputRelatedBookName.error = null
+        inputRelatedForeignAmount.error = null
         var isValid = true
 
         if (selectedEntryType == null) {
@@ -101,15 +99,24 @@ class CreateEntryFragment : Fragment() {
             isValid = false
         }
 
-        if (selectedEntryType != TransactionType.TRANSFER_IN_FROM_INTEREST
-                && editTwdAmount.text.isNullOrEmpty()) {
-            inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
-            isValid = false
+        if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_TWD
+                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD) {
+            if (editTwdAmount.text.isNullOrEmpty()) {
+                inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
+                isValid = false
+            }
         }
 
-        if (checkSyncToAnotherBook.isChecked && editBookName.text.isNullOrEmpty()) {
-            inputBookName.error = requireContext().getString(R.string.error_should_select_one)
-            isValid = false
+        if (selectedEntryType?.isRelatedToAnotherBook == true
+                && checkSyncToRelatedBook.isChecked) {
+            if (editRelatedBookName.text.isNullOrEmpty()) {
+                inputRelatedBookName.error = requireContext().getString(R.string.error_should_select_one)
+                isValid = false
+            }
+            if (editRelatedForeignAmount.text.isNullOrEmpty()) {
+                inputRelatedForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
+                isValid = false
+            }
         }
 
         return isValid
@@ -121,37 +128,24 @@ class CreateEntryFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
             .setItems(entryTypeLocalNames) { dialog, position ->
                 selectedEntryType = entryTypes[position]
+                resetWidgetByTransactionType(selectedEntryType!!)
                 editTransactionType.setText(entryTypeLocalNames[position])
-
-                selectedAnotherBookId = null
-                if (selectedEntryType!!.isRelatedToAnotherBook) {
-                    ViewUtils.setVisible(checkSyncToAnotherBook)
-                } else {
-                    ViewUtils.setInvisible(checkSyncToAnotherBook, inputBookName)
-                }
-
-                if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_INTEREST) {
-                    ViewUtils.setInvisible(inputTwdAmount)
-                    editTwdAmount.text?.clear()
-                } else {
-                    ViewUtils.setVisible(inputTwdAmount)
-                }
             }
 
         return builder.create()
                 .also { entryTypeSelectingDialog = it };
     }
 
-    private fun initAnotherBookSelectingDialog(): AlertDialog {
+    private fun initRelatedBookSelectingDialog(): AlertDialog {
         val bookNames = listOf("AAA", "BBB", "CCC").toTypedArray()
         val builder = AlertDialog.Builder(requireContext()).setItems(bookNames) { dialog, position ->
             // TODO: record selected book
-            selectedAnotherBookId = bookNames[position] + " id"
-            editBookName.setText(bookNames[position])
+            selectedRelatedBookId = bookNames[position] + " id"
+            editRelatedBookName.setText(bookNames[position])
         }
 
         return builder.create()
-            .also { anotherBookSelectingDialog = it }
+            .also { relatedBookSelectingDialog = it }
     }
 
     private fun initTransactionDateSelectingDialog(): DatePickerDialog {
@@ -174,6 +168,46 @@ class CreateEntryFragment : Fragment() {
     private fun initToolbar() {
         val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
         actionBar?.title = requireContext().getString(R.string.create_transaction)
+    }
+
+    private fun resetWidgetByRelatingBook(isRelatedToAnotherBook: Boolean) {
+        if (isRelatedToAnotherBook) {
+            ViewUtils.setVisible(inputRelatedBookName, inputRelatedForeignAmount)
+        } else {
+            ViewUtils.setInvisible(inputRelatedBookName, inputRelatedForeignAmount)
+            ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
+        }
+    }
+
+    private fun resetWidgetByTransactionType(type: TransactionType) {
+        when (type) {
+            TransactionType.TRANSFER_IN_FROM_TWD,
+            TransactionType.TRANSFER_OUT_TO_TWD -> {
+                ViewUtils.setVisible(inputTwdAmount)
+                ViewUtils.setInvisible(
+                        checkSyncToRelatedBook, inputRelatedBookName,
+                        inputRelatedForeignAmount)
+                ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
+                checkSyncToRelatedBook.isChecked = false
+            }
+            TransactionType.TRANSFER_IN_FROM_FOREIGN,
+            TransactionType.TRANSFER_OUT_TO_FOREIGN -> {
+                ViewUtils.setVisible(
+                        checkSyncToRelatedBook, inputRelatedBookName,
+                        inputRelatedForeignAmount)
+                ViewUtils.setInvisible(inputTwdAmount)
+                ViewUtils.clearText(editTwdAmount)
+            }
+            TransactionType.TRANSFER_IN_FROM_INTEREST,
+            TransactionType.TRANSFER_IN_FROM_OTHER,
+            TransactionType.TRANSFER_OUT_TO_OTHER -> {
+                ViewUtils.setInvisible(
+                        inputTwdAmount, checkSyncToRelatedBook,
+                        inputRelatedBookName, inputRelatedForeignAmount)
+                ViewUtils.clearText(editTwdAmount, editRelatedBookName, editRelatedForeignAmount)
+                checkSyncToRelatedBook.isChecked = false
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

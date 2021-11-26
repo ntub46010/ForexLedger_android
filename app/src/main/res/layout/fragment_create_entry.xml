@@ -76,7 +76,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/checkSyncToAnotherBook"
+            android:id="@+id/checkSyncToRelatedBook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/also_create_entry_in_another_book"
@@ -85,16 +85,31 @@
             app:layout_constraintTop_toBottomOf="@id/inputTwdAmount"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputBookName"
+            android:id="@+id/inputRelatedBookName"
             android:hint="@string/book_name"
             style="@style/TextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/checkSyncToAnotherBook">
+            app:layout_constraintTop_toBottomOf="@id/checkSyncToRelatedBook">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editBookName"
+                android:id="@+id/editRelatedBookName"
                 style="@style/DropdownEditText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputRelatedForeignAmount"
+            android:hint="@string/foreign_currency_amount"
+            style="@style/TextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputRelatedBookName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editRelatedForeignAmount"
+                style="@style/EditText"
+                android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

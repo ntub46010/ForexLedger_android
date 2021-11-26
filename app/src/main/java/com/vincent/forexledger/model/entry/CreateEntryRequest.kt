@@ -6,5 +6,6 @@ data class CreateEntryRequest(var bookId: String,
                               var transactionType: TransactionType,
                               var transactionDate: Date,
                               var foreignAmount: Double,
-                              var twdAmount: Double?,
-                              var anotherBookId: String?)
+                              var twdAmount: Int?,
+                              var relatedBookId: String?,
+                              var relatedBookForeignAmount: Double?)
