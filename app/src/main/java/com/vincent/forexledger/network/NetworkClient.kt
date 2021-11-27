@@ -13,6 +13,7 @@ object NetworkClient {
 
     private var exchangeRateApi: ExchangeRateApi? = null
     private var bookApi: BookApi? = null
+    private var entryApi: EntryApi? = null
 
     init {
         val client = OkHttpClient.Builder()
@@ -40,5 +41,12 @@ object NetworkClient {
             bookApi = retrofit.create(BookApi::class.java)
         }
         return bookApi!!;
+    }
+
+    fun entryAPI(): EntryApi {
+        if (entryApi == null) {
+            entryApi = retrofit.create(EntryApi::class.java)
+        }
+        return entryApi!!
     }
 }
