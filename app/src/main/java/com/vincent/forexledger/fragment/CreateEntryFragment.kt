@@ -48,10 +48,13 @@ class CreateEntryFragment : Fragment() {
         val args = CreateEntryFragmentArgs.fromBundle(requireArguments())
 
         bookId = args.bookId
-        balance = args.balance
+        balance = args.balance.toDouble()
 
         initToolbar()
-        ViewUtils.setInvisible(checkSyncToRelatedBook, inputRelatedBookName, layoutForm)
+        ViewUtils.setInvisible(layoutForm)
+        ViewUtils.setGone(
+                inputTwdAmount, checkSyncToRelatedBook,
+                inputRelatedBookName, inputRelatedForeignAmount)
         ViewUtils.setVisible(progressBar)
 
         editTransactionType.setOnClickListener {
@@ -141,10 +144,13 @@ class CreateEntryFragment : Fragment() {
             if (ViewUtils.isEmpty(editRelatedForeignAmount)) {
                 inputRelatedForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
-            } else if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_FOREIGN
-                    && ViewUtils.toDouble(editRelatedForeignAmount) < ViewUtils.toDouble(editForeignAmount)) {
-                inputRelatedForeignAmount.error = requireContext().getString(R.string.error_related_book_is_insufficient)
-                isValid = false
+            } else if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_FOREIGN) {
+                val selectedBookBalance = selectedRelatedBook!!.balance
+                if (selectedBookBalance == 0.0
+                        || selectedBookBalance < ViewUtils.toDouble(editRelatedForeignAmount)) {
+                    inputRelatedForeignAmount.error = requireContext().getString(R.string.error_related_book_is_insufficient)
+                    isValid = false
+                }
             }
         }
 
@@ -204,7 +210,7 @@ class CreateEntryFragment : Fragment() {
         if (isRelatedToAnotherBook) {
             ViewUtils.setVisible(inputRelatedBookName, inputRelatedForeignAmount)
         } else {
-            ViewUtils.setInvisible(inputRelatedBookName, inputRelatedForeignAmount)
+            ViewUtils.setGone(inputRelatedBookName, inputRelatedForeignAmount)
             ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
         }
     }
@@ -214,7 +220,7 @@ class CreateEntryFragment : Fragment() {
             TransactionType.TRANSFER_IN_FROM_TWD,
             TransactionType.TRANSFER_OUT_TO_TWD -> {
                 ViewUtils.setVisible(inputTwdAmount)
-                ViewUtils.setInvisible(
+                ViewUtils.setGone(
                         checkSyncToRelatedBook, inputRelatedBookName,
                         inputRelatedForeignAmount)
                 ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
@@ -222,16 +228,14 @@ class CreateEntryFragment : Fragment() {
             }
             TransactionType.TRANSFER_IN_FROM_FOREIGN,
             TransactionType.TRANSFER_OUT_TO_FOREIGN -> {
-                ViewUtils.setVisible(
-                        checkSyncToRelatedBook, inputRelatedBookName,
-                        inputRelatedForeignAmount)
-                ViewUtils.setInvisible(inputTwdAmount)
+                ViewUtils.setVisible(checkSyncToRelatedBook)
+                ViewUtils.setGone(inputTwdAmount)
                 ViewUtils.clearText(editTwdAmount)
             }
             TransactionType.TRANSFER_IN_FROM_INTEREST,
             TransactionType.TRANSFER_IN_FROM_OTHER,
             TransactionType.TRANSFER_OUT_TO_OTHER -> {
-                ViewUtils.setInvisible(
+                ViewUtils.setGone(
                         inputTwdAmount, checkSyncToRelatedBook,
                         inputRelatedBookName, inputRelatedForeignAmount)
                 ViewUtils.clearText(editTwdAmount, editRelatedBookName, editRelatedForeignAmount)
@@ -254,7 +258,12 @@ class CreateEntryFragment : Fragment() {
         ViewUtils.setVisible(layoutForm)
 
         if (response.getStatusCode() == 200) {
-            myBooks = response.getBody() ?: emptyList()
+            myBooks = response.getBody()
+                    ?.filter { it.id != bookId }
+                    ?: emptyList()
+            if (myBooks.isEmpty()) {
+                ViewUtils.setGone(checkSyncToRelatedBook)
+            }
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }

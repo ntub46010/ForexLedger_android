@@ -40,7 +40,7 @@ class BookDetailFragment : Fragment() {
         initToolbar(args.bookName)
 
         btnCreateEntry.setOnClickListener {
-            findNavController().navigate(BookDetailFragmentDirections.toCreateEntry(bookId, book.balance))
+            findNavController().navigate(BookDetailFragmentDirections.toCreateEntry(bookId, book.balance.toFloat()))
         }
         ViewUtils.setInvisible(btnCreateEntry)
 

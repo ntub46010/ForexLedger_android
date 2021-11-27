@@ -87,7 +87,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputRelatedBookName"
-            android:hint="@string/book_name"
+            android:hint="@string/related_book_name"
             style="@style/TextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputRelatedForeignAmount"
-            android:hint="@string/foreign_currency_amount"
+            android:hint="@string/related_foreign_currency_amount"
             style="@style/TextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

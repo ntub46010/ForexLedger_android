@@ -29,6 +29,8 @@
     <string name="foreign_currency_amount">外幣金額</string>
     <string name="twd_amount">臺幣金額</string>
     <string name="also_create_entry_in_another_book">也登記到另一本帳簿</string>
+    <string name="related_book_name">關聯帳簿名稱</string>
+    <string name="related_foreign_currency_amount">關聯外幣金額</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>

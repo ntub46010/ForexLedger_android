@@ -10,6 +10,9 @@ object ViewUtils {
     fun setInvisible(vararg views: View) =
             views.forEach { it.visibility = View.INVISIBLE }
 
+    fun setGone(vararg views: View) =
+            views.forEach { it.visibility = View.GONE }
+
     fun clearText(vararg views: EditText?) =
             views.forEach { it?.text?.clear() }
 

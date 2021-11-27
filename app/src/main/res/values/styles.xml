@@ -4,6 +4,7 @@
     <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/widget_normal_spacing</item>
         <item name="hintTextColor">@color/brown1</item>
         <item name="errorEnabled">true</item>
     </style>
