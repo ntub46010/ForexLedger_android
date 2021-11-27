@@ -61,6 +61,7 @@
     <string name="bank_fubon">富邦銀行</string>
     <string name="bank_richart">Richart</string>
 
+    <string name="message_create_successfully">建立成功</string>
     <string name="error_should_not_be_empty">不可為空</string>
     <string name="error_should_select_one">請選擇一個</string>
     <string name="error_unsupported_bank_currency">銀行不支援此幣別</string>

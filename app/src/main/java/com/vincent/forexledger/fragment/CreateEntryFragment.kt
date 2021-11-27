@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.book.BookListVO
@@ -15,6 +16,7 @@ import com.vincent.forexledger.model.entry.CreateEntryRequest
 import com.vincent.forexledger.model.entry.TransactionType
 import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.BookService
+import com.vincent.forexledger.service.EntryService
 import com.vincent.forexledger.utils.FormatUtils
 import com.vincent.forexledger.utils.ResponseCallback
 import com.vincent.forexledger.utils.ViewUtils
@@ -92,7 +94,24 @@ class CreateEntryFragment : Fragment() {
                 editRelatedForeignAmount.text.toString().toDoubleOrNull()
         )
 
-        Toast.makeText(requireContext(), request.toString(), Toast.LENGTH_SHORT).show()
+        val callback = ResponseCallback<Unit, String>(
+                { onEntryCreated(it) },
+                { Log.e(Constants.TAG_APPLICATION, it) }
+        )
+        EntryService.createEntry(request, callback)
+    }
+
+    private fun onEntryCreated(response: ResponseEntity<Unit>) {
+        if (response.getStatusCode() == 201) {
+            findNavController().popBackStack()
+            Toast.makeText(requireContext(), R.string.message_create_successfully, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        response.disposables
+                .filterNotNull()
+                .forEach { disposables.add(it) }
     }
 
     private fun validateData(): Boolean {
