@@ -33,8 +33,19 @@ class BookDetailActivity : AppCompatActivity() {
 
     private fun initToolbar(bookName: String) {
         setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener { finish() }
         supportActionBar?.title = bookName
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        toolbar.setNavigationOnClickListener {
+            if (!findNavController(R.id.layout_navigation_container).popBackStack()) {
+                finish()
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!findNavController(R.id.layout_navigation_container).popBackStack()) {
+            super.onBackPressed()
+        }
     }
 }

@@ -9,19 +9,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.book.BookDetailVO
 import com.vincent.forexledger.network.ResponseEntity
 import com.vincent.forexledger.service.BookService
 import com.vincent.forexledger.utils.ResponseCallback
+import com.vincent.forexledger.utils.ViewUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_book_detail.*
+import java.math.BigDecimal
 
 class BookDetailFragment : Fragment() {
     private val disposables = CompositeDisposable()
 
     private lateinit var bookId: String
+    private lateinit var book: BookDetailVO
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,8 +35,14 @@ class BookDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = BookDetailFragmentArgs.fromBundle(requireArguments())
+
         bookId = args.bookId
         initToolbar(args.bookName)
+
+        btnCreateEntry.setOnClickListener {
+            findNavController().navigate(BookDetailFragmentDirections.toCreateEntry(bookId, book.balance.toFloat()))
+        }
+        ViewUtils.setInvisible(btnCreateEntry)
 
         getBook()
     }
@@ -53,10 +63,12 @@ class BookDetailFragment : Fragment() {
 
     private fun onBookReturned(response: ResponseEntity<BookDetailVO>) {
         if (response.getStatusCode() == 200) {
-            val book = response.getBody()!!
+            book = response.getBody()!!
             displayCurrentValueCard(book)
             displayProfitCard(book)
             displayLastInvestCard(book)
+
+            ViewUtils.setVisible(btnCreateEntry)
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }
@@ -82,7 +94,10 @@ class BookDetailFragment : Fragment() {
             if (book.twdProfitRate == null) {
                 findViewById<TextView>(R.id.textProfitRate).text = "-"
             } else {
-                findViewById<TextView>(R.id.textProfitRate).text = (book.twdProfitRate!! * 100).toString()
+                findViewById<TextView>(R.id.textProfitRate).text = BigDecimal.valueOf(book.twdProfitRate!!)
+                        .multiply(BigDecimal.valueOf(100))
+                        .toDouble()
+                        .toString()
             }
 
             findViewById<TextView>(R.id.textBreakEvenPointValue).text = book.breakEvenPoint?.toString() ?: "-"

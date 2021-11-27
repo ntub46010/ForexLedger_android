@@ -23,6 +23,14 @@
     <string name="profit">損益</string>
     <string name="break_even_point">損益平衡</string>
     <string name="last_invest">上次投入</string>
+    <string name="create_transaction">建立交易</string>
+    <string name="transaction_type">交易類型</string>
+    <string name="transaction_date">交易日期</string>
+    <string name="foreign_currency_amount">外幣金額</string>
+    <string name="twd_amount">臺幣金額</string>
+    <string name="also_create_entry_in_another_book">也登記到另一本帳簿</string>
+    <string name="related_book_name">關聯帳簿名稱</string>
+    <string name="related_foreign_currency_amount">關聯外幣金額</string>
 
     <string name="symbol_twd">TWD</string>
     <string name="symbol_percentage">%</string>
@@ -42,11 +50,21 @@
     <string name="currency_sek">瑞典幣</string>
     <string name="currency_thb">泰國銖</string>
 
+    <string name="transaction_type_transfer_in_from_twd">從臺幣轉入</string>
+    <string name="transaction_type_transfer_in_from_foreign">從外幣轉入</string>
+    <string name="transaction_type_transfer_in_from_interest">利息收入</string>
+    <string name="transaction_type_transfer_in_from_other">其他轉入</string>
+    <string name="transaction_type_transfer_out_to_twd">轉出為臺幣</string>
+    <string name="transaction_type_transfer_out_to_foreign">轉出為外幣</string>
+    <string name="transaction_type_transfer_out_to_other">其他轉出</string>
+
     <string name="bank_fubon">富邦銀行</string>
     <string name="bank_richart">Richart</string>
 
     <string name="error_should_not_be_empty">不可為空</string>
     <string name="error_should_select_one">請選擇一個</string>
     <string name="error_unsupported_bank_currency">銀行不支援此幣別</string>
+    <string name="error_this_book_is_insufficient">本帳簿餘額不足</string>
+    <string name="error_related_book_is_insufficient">關聯帳簿餘額不足</string>
 
 </resources>

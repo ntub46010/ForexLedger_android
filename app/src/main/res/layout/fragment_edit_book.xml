@@ -41,12 +41,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editBank"
-                style="@style/EditText"
-                android:paddingEnd="10dp"
-                android:drawableEnd="@drawable/icon_drop_down_arrow"
-                android:editable="false"
-                android:clickable="true"
-                android:focusable="true" />
+                style="@style/DropdownEditText" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
