@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object NetworkClient {
-    private const val SERVER_IP = "http://192.168.42.210:8080/"
+    private const val SERVER_IP = "http://192.168.42.21:8080/"
     private val retrofit: Retrofit
 
     private var exchangeRateApi: ExchangeRateApi? = null
