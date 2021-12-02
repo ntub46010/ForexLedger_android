@@ -131,7 +131,7 @@ class EditBookFragment : Fragment() {
         val callback = ResponseCallback<Unit, String>(
                 { onBookCreated(it, bookName) },
                 { Log.e(Constants.TAG_APPLICATION, it) }
-        );
+        )
         BookService.createBook(request, callback)
     }
 

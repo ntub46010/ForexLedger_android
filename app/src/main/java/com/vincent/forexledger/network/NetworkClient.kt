@@ -8,11 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object NetworkClient {
-    private const val SERVER_IP = "http://192.168.42.210:8080/"
+    private const val SERVER_IP = "http://192.168.42.21:8080/"
     private val retrofit: Retrofit
 
     private var exchangeRateApi: ExchangeRateApi? = null
     private var bookApi: BookApi? = null
+    private var entryApi: EntryApi? = null
 
     init {
         val client = OkHttpClient.Builder()
@@ -40,5 +41,12 @@ object NetworkClient {
             bookApi = retrofit.create(BookApi::class.java)
         }
         return bookApi!!;
+    }
+
+    fun entryAPI(): EntryApi {
+        if (entryApi == null) {
+            entryApi = retrofit.create(EntryApi::class.java)
+        }
+        return entryApi!!
     }
 }
