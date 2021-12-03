@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/widget_normal_spacing"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/parent_normal_padding"
+        android:background="@color/brown3">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <TextView
+            android:text="2021/12/02"
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/font_size_3"
+            android:textColor="@color/black3" />
+
+        <TextView
+            android:text="轉入"
+            android:id="@+id/textPrimaryDirection"
+            style="@style/EntryCardPrimaryText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textDate"
+            android:layout_marginTop="@dimen/widget_normal_spacing" />
+
+        <TextView
+            android:text="USD"
+            android:id="@+id/textPrimaryCurrencyType"
+            style="@style/EntryCardPrimaryText"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/textPrimaryDirection"
+            android:layout_marginEnd="@dimen/widget_big_spacing" />
+        
+        <TextView
+            android:text="3,000"
+            android:id="@+id/textPrimaryAmount"
+            style="@style/EntryCardPrimaryText"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toEndOf="@id/textPrimaryDirection"
+            app:layout_constraintEnd_toStartOf="@id/textPrimaryCurrencyType"
+            app:layout_constraintTop_toTopOf="@id/textPrimaryCurrencyType"
+            android:layout_marginEnd="@dimen/widget_normal_spacing"
+            android:gravity="end" />
+
+        <TextView
+            android:text="轉出"
+            android:id="@+id/textRelatedDirection"
+            style="@style/EntryCardPrimaryText"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/textPrimaryDirection"
+            android:layout_marginStart="@dimen/widget_big_spacing" />
+
+        <TextView
+            android:text="TWD"
+            android:id="@+id/textRelatedCurrencyType"
+            style="@style/EntryCardPrimaryText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textRelatedDirection"
+            android:layout_marginStart="@dimen/widget_normal_spacing" />
+
+        <TextView
+            android:text="90,000"
+            android:id="@+id/textRelatedAmount"
+            style="@style/EntryCardPrimaryText"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toEndOf="@id/textRelatedDirection"
+            app:layout_constraintEnd_toStartOf="@id/textRelatedCurrencyType"
+            app:layout_constraintTop_toTopOf="@id/textRelatedDirection"
+            android:layout_marginEnd="@dimen/widget_normal_spacing"
+            android:gravity="end" />
+
+        <TextView
+            android:text="匯率31.0000；淨利299TWD"
+            android:id="@+id/textDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPrimaryDirection"
+            android:layout_marginTop="@dimen/widget_normal_spacing"
+            android:textSize="@dimen/font_size_2"
+            android:textColor="@color/black2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
