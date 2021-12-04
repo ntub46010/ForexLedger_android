@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.EntryListAdapter
 import com.vincent.forexledger.model.entry.EntryListVO
+import com.vincent.forexledger.model.entry.TransactionType
 import com.vincent.forexledger.model.exchangerate.CurrencyType
 import com.vincent.forexledger.utils.ViewUtils
 import kotlinx.android.synthetic.main.content_progress_bar.*
@@ -31,13 +33,13 @@ class EntryListFragment : Fragment() {
 
         initToolbar(args.bookName)
 
+        listEntry.layoutManager = LinearLayoutManager(requireContext())
         getEntries(args.bookId)
     }
 
-    private fun initToolbar(bookName: String?) {
-        bookName?.let {
-            (requireActivity() as AppCompatActivity).supportActionBar?.title = it
-        }
+    private fun initToolbar(bookName: String) {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+                "$bookName${requireContext().getString(R.string.transaction_records_of)}"
     }
 
     private fun getEntries(bookId: String) {
@@ -58,13 +60,13 @@ class EntryListFragment : Fragment() {
 
     private fun fakeEntries(): List<EntryListVO> {
         return listOf(
-                EntryListVO("1", Date(), 100.0, CurrencyType.USD, 2785.0, CurrencyType.THB, "匯率27.85"),
-                EntryListVO("2", Date(), 95.0, CurrencyType.USD, 2945.0, CurrencyType.THB, "匯率31；淨利299TWD"),
-                EntryListVO("3", Date(), 100.0, CurrencyType.USD, 133.89, CurrencyType.GBP, "匯率0.7469"),
-                EntryListVO("4", Date(), 133.89, CurrencyType.GBP, 100.0, CurrencyType.USD, "匯率0.7469"),
-                EntryListVO("5", Date(), 126.93, CurrencyType.ZAR, null, null, "利息收入"),
-                EntryListVO("6", Date(), 2000.0, CurrencyType.USD, null, null, "轉至奈米投"),
-                EntryListVO("7", Date(), 2050.0, CurrencyType.USD, null, null, null)
+                EntryListVO("1", Date(), TransactionType.TRANSFER_IN_FROM_TWD, 100.0, CurrencyType.USD, 2785.0, CurrencyType.THB, "匯率27.85"),
+                EntryListVO("2", Date(), TransactionType.TRANSFER_OUT_TO_TWD, 95.0, CurrencyType.USD, 2945.0, CurrencyType.THB, "匯率31；淨利299TWD"),
+                EntryListVO("3", Date(), TransactionType.TRANSFER_IN_FROM_FOREIGN, 100.0, CurrencyType.USD, 133.89, CurrencyType.GBP, "匯率0.7469"),
+                EntryListVO("4", Date(), TransactionType.TRANSFER_OUT_TO_FOREIGN, 133.89, CurrencyType.GBP, 100.0, CurrencyType.USD, "匯率0.7469"),
+                EntryListVO("5", Date(), TransactionType.TRANSFER_IN_FROM_INTEREST, 126.93, CurrencyType.ZAR, null, null, "利息收入"),
+                EntryListVO("6", Date(), TransactionType.TRANSFER_OUT_TO_OTHER, 2000.0, CurrencyType.USD, null, null, "轉至奈米投"),
+                EntryListVO("7", Date(), TransactionType.TRANSFER_IN_FROM_OTHER, 2050.0, CurrencyType.USD, null, null, null)
         )
     }
 }

@@ -50,7 +50,7 @@
         android:text="看交易紀錄"
         android:textSize="@dimen/font_size_1"
         android:textColor="@color/black"
-        android:background="@color/brown3"/>
+        android:background="@color/brown"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnCreateEntry"

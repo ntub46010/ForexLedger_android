@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vincent.forexledger.R
 import com.vincent.forexledger.model.entry.EntryListVO
+import com.vincent.forexledger.model.entry.TransactionType
 import com.vincent.forexledger.utils.FormatUtils
 
 class EntryListAdapter(private val entries: List<EntryListVO>)
@@ -28,18 +29,41 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
             findViewById<TextView>(R.id.textPrimaryAmount).text = FormatUtils.formatMoney(entry.primaryAmount)
             findViewById<TextView>(R.id.textPrimaryCurrencyType).text = entry.primaryCurrencyType.name
 
+            val transactionType = entry.transactionType
+
+            findViewById<TextView>(R.id.textPrimaryDirection).text =
+                    if (transactionType.isTransferIn) context.getString(R.string.transfer_in)
+                    else context.getString(R.string.transfer_out)
+
+            if (transactionType != TransactionType.TRANSFER_IN_FROM_INTEREST &&
+                    transactionType != TransactionType.TRANSFER_IN_FROM_OTHER &&
+                    transactionType != TransactionType.TRANSFER_OUT_TO_OTHER) {
+                findViewById<TextView>(R.id.textRelatedDirection).text =
+                        if (entry.transactionType.isTransferIn) context.getString(R.string.transfer_out)
+                        else context.getString(R.string.transfer_in)
+            }
+
             entry.relatedAmount?.let {
                 findViewById<TextView>(R.id.textRelatedAmount).text = FormatUtils.formatMoney(it)
             }
+
             entry.relatedCurrencyType?.let {
                 findViewById<TextView>(R.id.textRelatedCurrencyType).text = it.name
             }
+
             entry.description?.let {
                 findViewById<TextView>(R.id.textDescription).text = it
+            }
+
+            findViewById<TextView>(R.id.textDescription).text = entry.description ?: context.getString(R.string.no_entry_description)
+
+            if (transactionType == TransactionType.TRANSFER_IN_FROM_TWD ||
+                    transactionType == TransactionType.TRANSFER_OUT_TO_TWD) {
+                findViewById<TextView>(R.id.textRelatedCurrencyType).text = context.getString(R.string.symbol_twd)
             }
         }
     }
 
-    class EntryListViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    inner class EntryListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 }
