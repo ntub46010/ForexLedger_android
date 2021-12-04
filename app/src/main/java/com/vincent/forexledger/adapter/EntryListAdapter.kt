@@ -27,9 +27,16 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
             findViewById<TextView>(R.id.textDate).text = FormatUtils.formatDateStr(entry.transactionDate)
             findViewById<TextView>(R.id.textPrimaryAmount).text = FormatUtils.formatMoney(entry.primaryAmount)
             findViewById<TextView>(R.id.textPrimaryCurrencyType).text = entry.primaryCurrencyType.name
-            findViewById<TextView>(R.id.textRelatedAmount).text = FormatUtils.formatMoney(entry.relatedAmount)
-            findViewById<TextView>(R.id.textRelatedCurrencyType).text = entry.relatedCurrencyType.name
-            findViewById<TextView>(R.id.textDescription).text = entry.description
+
+            entry.relatedAmount?.let {
+                findViewById<TextView>(R.id.textRelatedAmount).text = FormatUtils.formatMoney(it)
+            }
+            entry.relatedCurrencyType?.let {
+                findViewById<TextView>(R.id.textRelatedCurrencyType).text = it.name
+            }
+            entry.description?.let {
+                findViewById<TextView>(R.id.textDescription).text = it
+            }
         }
     }
 

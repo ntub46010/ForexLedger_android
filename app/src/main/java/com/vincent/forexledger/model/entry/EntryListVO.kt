@@ -7,6 +7,6 @@ data class EntryListVO(var id: String,
                        var transactionDate: Date,
                        var primaryAmount: Double,
                        var primaryCurrencyType: CurrencyType,
-                       var relatedAmount: Double,
-                       var relatedCurrencyType: CurrencyType,
-                       var description: String)
+                       var relatedAmount: Double?,
+                       var relatedCurrencyType: CurrencyType?,
+                       var description: String?)
