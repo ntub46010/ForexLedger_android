@@ -16,10 +16,13 @@
         <argument
             android:name="bookName"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="false" />
         <action
             android:id="@+id/toCreateEntry"
             app:destination="@id/createEntryFragment" />
+        <action
+            android:id="@+id/toEntryList"
+            app:destination="@id/entryListFragment" />
     </fragment>
 
     <fragment
@@ -33,6 +36,20 @@
         <argument
             android:name="balance"
             app:argType="float"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/entryListFragment"
+        android:name="com.vincent.forexledger.fragment.EntryListFragment"
+        android:label="EntryListFragment">
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            app:nullable="false" />
+        <argument
+            android:name="bookName"
+            app:argType="string"
             app:nullable="false" />
     </fragment>
 

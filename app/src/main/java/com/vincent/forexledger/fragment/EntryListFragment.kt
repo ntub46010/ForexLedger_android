@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.EntryListAdapter
@@ -23,13 +24,23 @@ class EntryListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        getEntries()
-    }
-
-    private fun getEntries() {
         ViewUtils.setInvisible(listEntry)
         ViewUtils.setVisible(progressBar)
+
+        val args = EntryListFragmentArgs.fromBundle(requireArguments())
+
+        initToolbar(args.bookName)
+
+        getEntries(args.bookId)
+    }
+
+    private fun initToolbar(bookName: String?) {
+        bookName?.let {
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = it
+        }
+    }
+
+    private fun getEntries(bookId: String) {
         displayEntries(fakeEntries())
     }
 

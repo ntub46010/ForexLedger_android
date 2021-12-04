@@ -39,6 +39,19 @@
         <include layout="@layout/card_book_last_invest"/>
     </FrameLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEntryList"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutLastInvest"
+        android:layout_marginTop="@dimen/widget_big_spacing"
+        android:text="看交易紀錄"
+        android:textSize="@dimen/font_size_1"
+        android:textColor="@color/black"
+        android:background="@color/brown3"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnCreateEntry"
         android:layout_width="wrap_content"

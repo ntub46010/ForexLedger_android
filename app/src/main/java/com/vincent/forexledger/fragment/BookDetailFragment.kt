@@ -44,6 +44,11 @@ class BookDetailFragment : Fragment() {
         }
         ViewUtils.setInvisible(btnCreateEntry)
 
+        btnEntryList.setOnClickListener {
+            findNavController().navigate(BookDetailFragmentDirections.toEntryList(bookId, args.bookName!!))
+        }
+        ViewUtils.setInvisible(btnEntryList)
+
         getBook()
     }
 
@@ -68,7 +73,7 @@ class BookDetailFragment : Fragment() {
             displayProfitCard(book)
             displayLastInvestCard(book)
 
-            ViewUtils.setVisible(btnCreateEntry)
+            ViewUtils.setVisible(btnCreateEntry, btnEntryList)
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }
