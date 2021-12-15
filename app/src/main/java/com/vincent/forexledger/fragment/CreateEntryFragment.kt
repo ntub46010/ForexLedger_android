@@ -138,16 +138,19 @@ class CreateEntryFragment : Fragment() {
             isValid = false
         } else if (selectedEntryType?.isTransferOut == true) {
             val foreignAmount = ViewUtils.toDouble(editForeignAmount)
+            if (foreignAmount <= 0) {
+                inputForeignAmount.error = requireContext().getString(R.string.error_should_be_positive)
+                isValid = false
+            }
             if (foreignAmount > balance) {
                 inputForeignAmount.error = requireContext().getString(R.string.error_this_book_is_insufficient)
                 isValid = false
             }
         }
 
-        // ======
-
         if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_TWD
-                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD) {
+                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD
+                || selectedEntryType == TransactionType.TRANSFER_IN_FROM_OTHER) {
             if (ViewUtils.isEmpty(editTwdAmount)) {
                 inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
@@ -160,8 +163,7 @@ class CreateEntryFragment : Fragment() {
             }
         }
 
-        if (selectedEntryType?.isRelatedToAnotherBook == true
-                && checkSyncToRelatedBook.isChecked) {
+        if (checkSyncToRelatedBook.isChecked) {
             if (ViewUtils.isEmpty(editRelatedBookName)) {
                 inputRelatedBookName.error = requireContext().getString(R.string.error_should_select_one)
                 isValid = false
@@ -170,9 +172,14 @@ class CreateEntryFragment : Fragment() {
                 inputRelatedForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
             } else if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_FOREIGN) {
-                val selectedBookBalance = selectedRelatedBook!!.balance
-                if (selectedBookBalance == 0.0
-                        || selectedBookBalance < ViewUtils.toDouble(editRelatedForeignAmount)) {
+                val relatedForeignAmount = ViewUtils.toDouble(editRelatedForeignAmount)
+                if (relatedForeignAmount <= 0) {
+                    inputForeignAmount.error = requireContext().getString(R.string.error_should_be_positive)
+                    isValid = false
+                }
+
+                val selectedBookBalance = selectedRelatedBook?.balance ?: 0.0
+                if (selectedBookBalance < relatedForeignAmount) {
                     inputRelatedForeignAmount.error = requireContext().getString(R.string.error_related_book_is_insufficient)
                     isValid = false
                 }

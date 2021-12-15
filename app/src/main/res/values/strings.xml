@@ -63,6 +63,7 @@
 
     <string name="message_create_successfully">建立成功</string>
     <string name="error_should_not_be_empty">不可為空</string>
+    <string name="error_should_be_positive">請輸入正數</string>
     <string name="error_should_select_one">請選擇一個</string>
     <string name="error_unsupported_bank_currency">銀行不支援此幣別</string>
     <string name="error_this_book_is_insufficient">本帳簿餘額不足</string>
