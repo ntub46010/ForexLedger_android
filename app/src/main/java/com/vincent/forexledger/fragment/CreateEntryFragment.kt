@@ -136,10 +136,12 @@ class CreateEntryFragment : Fragment() {
         if (ViewUtils.isEmpty(editForeignAmount)) {
             inputForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
             isValid = false
-        } else if (selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD
-                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_FOREIGN
-                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_OTHER) {
+        } else if (selectedEntryType?.isTransferOut == true) {
             val foreignAmount = ViewUtils.toDouble(editForeignAmount)
+            if (foreignAmount <= 0) {
+                inputForeignAmount.error = requireContext().getString(R.string.error_should_be_positive)
+                isValid = false
+            }
             if (foreignAmount > balance) {
                 inputForeignAmount.error = requireContext().getString(R.string.error_this_book_is_insufficient)
                 isValid = false
@@ -147,7 +149,8 @@ class CreateEntryFragment : Fragment() {
         }
 
         if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_TWD
-                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD) {
+                || selectedEntryType == TransactionType.TRANSFER_OUT_TO_TWD
+                || selectedEntryType == TransactionType.TRANSFER_IN_FROM_OTHER) {
             if (ViewUtils.isEmpty(editTwdAmount)) {
                 inputTwdAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
@@ -160,8 +163,7 @@ class CreateEntryFragment : Fragment() {
             }
         }
 
-        if (selectedEntryType?.isRelatedToAnotherBook == true
-                && checkSyncToRelatedBook.isChecked) {
+        if (checkSyncToRelatedBook.isChecked) {
             if (ViewUtils.isEmpty(editRelatedBookName)) {
                 inputRelatedBookName.error = requireContext().getString(R.string.error_should_select_one)
                 isValid = false
@@ -170,9 +172,14 @@ class CreateEntryFragment : Fragment() {
                 inputRelatedForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
                 isValid = false
             } else if (selectedEntryType == TransactionType.TRANSFER_IN_FROM_FOREIGN) {
-                val selectedBookBalance = selectedRelatedBook!!.balance
-                if (selectedBookBalance == 0.0
-                        || selectedBookBalance < ViewUtils.toDouble(editRelatedForeignAmount)) {
+                val relatedForeignAmount = ViewUtils.toDouble(editRelatedForeignAmount)
+                if (relatedForeignAmount <= 0) {
+                    inputForeignAmount.error = requireContext().getString(R.string.error_should_be_positive)
+                    isValid = false
+                }
+
+                val selectedBookBalance = selectedRelatedBook?.balance ?: 0.0
+                if (selectedBookBalance < relatedForeignAmount) {
                     inputRelatedForeignAmount.error = requireContext().getString(R.string.error_related_book_is_insufficient)
                     isValid = false
                 }
@@ -236,14 +243,28 @@ class CreateEntryFragment : Fragment() {
             ViewUtils.setVisible(inputRelatedBookName, inputRelatedForeignAmount)
             ViewUtils.setGone(inputTwdAmount)
             ViewUtils.clearText(editTwdAmount)
-        } else {
-            ViewUtils.setVisible(inputTwdAmount)
-            ViewUtils.setGone(inputRelatedBookName, inputRelatedForeignAmount)
-            ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
+            return
+        }
+
+        ViewUtils.setGone(inputRelatedBookName, inputRelatedForeignAmount)
+        ViewUtils.clearText(editRelatedBookName, editRelatedForeignAmount)
+
+        when (selectedEntryType) {
+            TransactionType.TRANSFER_IN_FROM_OTHER,
+            TransactionType.TRANSFER_IN_FROM_FOREIGN,
+            TransactionType.TRANSFER_OUT_TO_FOREIGN -> {
+                ViewUtils.setVisible(inputTwdAmount)
+            }
+            TransactionType.TRANSFER_OUT_TO_OTHER -> {
+                ViewUtils.setGone(inputTwdAmount)
+            }
+            else -> {}
         }
     }
 
     private fun resetWidgetByTransactionType(type: TransactionType) {
+        ViewUtils.clearText(editTwdAmount, editRelatedBookName, editRelatedForeignAmount)
+
         when (type) {
             TransactionType.TRANSFER_IN_FROM_TWD,
             TransactionType.TRANSFER_OUT_TO_TWD -> {
@@ -256,16 +277,32 @@ class CreateEntryFragment : Fragment() {
             }
             TransactionType.TRANSFER_IN_FROM_FOREIGN,
             TransactionType.TRANSFER_OUT_TO_FOREIGN -> {
-                ViewUtils.setVisible(checkSyncToRelatedBook, inputTwdAmount)
+                ViewUtils.setGone(inputTwdAmount)
+                ViewUtils.setVisible(
+                        checkSyncToRelatedBook, inputRelatedBookName,
+                        inputRelatedForeignAmount)
+                checkSyncToRelatedBook.isChecked = true
                 ViewUtils.clearText(editTwdAmount)
             }
-            TransactionType.TRANSFER_IN_FROM_INTEREST,
-            TransactionType.TRANSFER_IN_FROM_OTHER,
-            TransactionType.TRANSFER_OUT_TO_OTHER -> {
+            TransactionType.TRANSFER_IN_FROM_INTEREST -> {
                 ViewUtils.setGone(
                         inputTwdAmount, checkSyncToRelatedBook,
                         inputRelatedBookName, inputRelatedForeignAmount)
                 ViewUtils.clearText(editTwdAmount, editRelatedBookName, editRelatedForeignAmount)
+                checkSyncToRelatedBook.isChecked = false
+            }
+            TransactionType.TRANSFER_IN_FROM_OTHER -> {
+                ViewUtils.setVisible(inputTwdAmount)
+                ViewUtils.setGone(
+                        checkSyncToRelatedBook, inputRelatedBookName,
+                        inputRelatedForeignAmount)
+                ViewUtils.clearText(editTwdAmount, editRelatedBookName, editRelatedForeignAmount)
+                checkSyncToRelatedBook.isChecked = false
+            }
+            TransactionType.TRANSFER_OUT_TO_OTHER -> {
+                ViewUtils.setGone(
+                        inputTwdAmount, checkSyncToRelatedBook,
+                        inputRelatedBookName, inputRelatedForeignAmount)
                 checkSyncToRelatedBook.isChecked = false
             }
         }
@@ -288,9 +325,11 @@ class CreateEntryFragment : Fragment() {
             myBooks = response.getBody()
                     ?.filter { it.id != bookId }
                     ?: emptyList()
+            /*
             if (myBooks.isEmpty()) {
                 ViewUtils.setGone(checkSyncToRelatedBook)
             }
+            */
         } else {
             Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
         }
