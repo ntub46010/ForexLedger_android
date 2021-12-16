@@ -40,6 +40,7 @@ class BookDetailFragment : Fragment() {
         initToolbar(args.bookName)
 
         btnCreateEntry.setOnClickListener {
+            // FIXME: pass balance as double
             findNavController().navigate(BookDetailFragmentDirections.toCreateEntry(bookId, book.balance.toFloat()))
         }
         ViewUtils.setInvisible(btnCreateEntry)
@@ -105,7 +106,12 @@ class BookDetailFragment : Fragment() {
                         .toString()
             }
 
-            findViewById<TextView>(R.id.textBreakEvenPointValue).text = book.breakEvenPoint?.toString() ?: "-"
+            val breakEvenPoint = book.breakEvenPoint
+            if (breakEvenPoint == null || breakEvenPoint <= 0) {
+                findViewById<TextView>(R.id.textBreakEvenPointValue).text = "-"
+            } else {
+                findViewById<TextView>(R.id.textBreakEvenPointValue).text = book.breakEvenPoint?.toString()
+            }
         }
     }
 
