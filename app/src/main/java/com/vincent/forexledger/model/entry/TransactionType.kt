@@ -10,5 +10,7 @@ enum class TransactionType(val localNameResource: Int,
     TRANSFER_OUT_TO_FOREIGN(R.string.transaction_type_transfer_out_to_foreign, false),
     TRANSFER_IN_FROM_INTEREST(R.string.transaction_type_transfer_in_from_interest, true),
     TRANSFER_IN_FROM_OTHER(R.string.transaction_type_transfer_in_from_other, true),
-    TRANSFER_OUT_TO_OTHER(R.string.transaction_type_transfer_out_to_other, false)
+    TRANSFER_OUT_TO_OTHER(R.string.transaction_type_transfer_out_to_other, false);
+
+    fun isTransferOut() = !isTransferIn
 }

@@ -88,6 +88,7 @@ class CreateEntryFragment : Fragment() {
                 bookId,
                 selectedEntryType!!,
                 selectedTransactionDate!!.time,
+                editDescription.text.toString(),
                 editForeignAmount.text.toString().toDouble(),
                 editTwdAmount.text.toString().toIntOrNull(),
                 selectedRelatedBook?.id,
@@ -136,7 +137,7 @@ class CreateEntryFragment : Fragment() {
         if (ViewUtils.isEmpty(editForeignAmount)) {
             inputForeignAmount.error = requireContext().getString(R.string.error_should_not_be_empty)
             isValid = false
-        } else if (selectedEntryType?.isTransferOut == true) {
+        } else if (selectedEntryType?.isTransferOut() == true) {
             val foreignAmount = ViewUtils.toDouble(editForeignAmount)
             if (foreignAmount <= 0) {
                 inputForeignAmount.error = requireContext().getString(R.string.error_should_be_positive)

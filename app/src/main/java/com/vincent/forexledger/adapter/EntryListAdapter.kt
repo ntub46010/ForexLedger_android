@@ -29,6 +29,12 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
             findViewById<TextView>(R.id.textPrimaryAmount).text = FormatUtils.formatMoney(entry.primaryAmount)
             findViewById<TextView>(R.id.textPrimaryCurrencyType).text = entry.primaryCurrencyType.name
 
+            if (entry.description.isNullOrEmpty()) {
+                findViewById<TextView>(R.id.textDescription).text = entry.description ?: context.getString(R.string.no_entry_description)
+            } else {
+                findViewById<TextView>(R.id.textDescription).text = entry.description
+            }
+
             val transactionType = entry.transactionType
 
             findViewById<TextView>(R.id.textPrimaryDirection).text =
@@ -47,19 +53,13 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
                 findViewById<TextView>(R.id.textRelatedAmount).text = FormatUtils.formatMoney(it)
             }
 
-            entry.relatedCurrencyType?.let {
-                findViewById<TextView>(R.id.textRelatedCurrencyType).text = it.name
-            }
-
-            entry.description?.let {
-                findViewById<TextView>(R.id.textDescription).text = it
-            }
-
-            findViewById<TextView>(R.id.textDescription).text = entry.description ?: context.getString(R.string.no_entry_description)
-
             if (transactionType == TransactionType.TRANSFER_IN_FROM_TWD ||
                     transactionType == TransactionType.TRANSFER_OUT_TO_TWD) {
                 findViewById<TextView>(R.id.textRelatedCurrencyType).text = context.getString(R.string.symbol_twd)
+            } else {
+                entry.relatedCurrencyType?.let {
+                    findViewById<TextView>(R.id.textRelatedCurrencyType).text = it.name
+                }
             }
         }
     }

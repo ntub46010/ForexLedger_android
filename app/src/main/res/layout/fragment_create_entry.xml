@@ -47,12 +47,29 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputDescription"
+            android:hint="@string/transaction_description"
+            style="@style/TextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputTransactionDate">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editDescription"
+                style="@style/EditText"
+                android:editable="false"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputForeignAmount"
             android:hint="@string/foreign_currency_amount"
             style="@style/TextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/inputTransactionDate">
+            app:layout_constraintTop_toBottomOf="@id/inputDescription">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editForeignAmount"

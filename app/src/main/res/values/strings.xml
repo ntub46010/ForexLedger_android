@@ -26,6 +26,7 @@
     <string name="create_transaction">建立交易</string>
     <string name="transaction_type">交易類型</string>
     <string name="transaction_date">交易日期</string>
+    <string name="transaction_description">摘要</string>
     <string name="foreign_currency_amount">外幣金額</string>
     <string name="twd_amount">臺幣金額</string>
     <string name="also_create_entry_in_another_book">也登記到另一本帳簿</string>
