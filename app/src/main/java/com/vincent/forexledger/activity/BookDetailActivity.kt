@@ -9,6 +9,8 @@ import kotlinx.android.synthetic.main.content_toolbar.*
 
 class BookDetailActivity : AppCompatActivity() {
 
+    private var isStarted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_detail)
@@ -19,16 +21,20 @@ class BookDetailActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        
-        val bookId = intent.getStringExtra(Constants.KEY_BOOK_ID)!!
-        val bookName = intent.getStringExtra(Constants.KEY_BOOK_NAME)!!
 
-        val bundle = Bundle().apply {
-            putString(Constants.KEY_BOOK_ID, bookId)
-            putString(Constants.KEY_BOOK_NAME, bookName)
+        if (!isStarted) {
+            val bookId = intent.getStringExtra(Constants.KEY_BOOK_ID)!!
+            val bookName = intent.getStringExtra(Constants.KEY_BOOK_NAME)!!
+
+            val bundle = Bundle().apply {
+                putString(Constants.KEY_BOOK_ID, bookId)
+                putString(Constants.KEY_BOOK_NAME, bookName)
+            }
+            findNavController(R.id.layout_navigation_container)
+                .setGraph(R.navigation.browsing_book, bundle)
+
+            isStarted = true
         }
-        findNavController(R.id.layout_navigation_container)
-            .setGraph(R.navigation.browsing_book, bundle)
     }
 
     private fun initToolbar(bookName: String) {
@@ -36,11 +42,7 @@ class BookDetailActivity : AppCompatActivity() {
         supportActionBar?.title = bookName
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        toolbar.setNavigationOnClickListener {
-            if (!findNavController(R.id.layout_navigation_container).popBackStack()) {
-                finish()
-            }
-        }
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     override fun onBackPressed() {

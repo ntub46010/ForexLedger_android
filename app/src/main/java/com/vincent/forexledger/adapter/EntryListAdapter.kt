@@ -30,7 +30,7 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
             findViewById<TextView>(R.id.textPrimaryCurrencyType).text = entry.primaryCurrencyType.name
 
             if (entry.description.isNullOrEmpty()) {
-                findViewById<TextView>(R.id.textDescription).text = entry.description ?: context.getString(R.string.no_entry_description)
+                findViewById<TextView>(R.id.textDescription).text = context.getString(R.string.no_entry_description)
             } else {
                 findViewById<TextView>(R.id.textDescription).text = entry.description
             }
