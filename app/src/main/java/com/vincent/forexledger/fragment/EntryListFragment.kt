@@ -1,23 +1,29 @@
 package com.vincent.forexledger.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vincent.forexledger.Constants
 import com.vincent.forexledger.R
 import com.vincent.forexledger.adapter.EntryListAdapter
 import com.vincent.forexledger.model.entry.EntryListVO
-import com.vincent.forexledger.model.entry.TransactionType
-import com.vincent.forexledger.model.exchangerate.CurrencyType
+import com.vincent.forexledger.network.ResponseEntity
+import com.vincent.forexledger.service.EntryService
+import com.vincent.forexledger.utils.ResponseCallback
 import com.vincent.forexledger.utils.ViewUtils
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.content_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_entry_list.*
-import java.util.*
 
 class EntryListFragment : Fragment() {
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -43,11 +49,30 @@ class EntryListFragment : Fragment() {
     }
 
     private fun getEntries(bookId: String) {
-        displayEntries(fakeEntries())
+        val callback = ResponseCallback<List<EntryListVO>, String>(
+                { onEntriesReturned(it) },
+                { Log.e(Constants.TAG_APPLICATION, it) }
+        )
+
+        EntryService.loadEntries(bookId, callback)
+    }
+
+    private fun onEntriesReturned(response: ResponseEntity<List<EntryListVO>>) {
+        ViewUtils.setInvisible(progressBar)
+        ViewUtils.setVisible(listEntry)
+
+        if (response.getStatusCode() == 200) {
+            displayEntries(response.getBody() ?: emptyList())
+        } else {
+            Toast.makeText(requireContext(), response.getStatusCode().toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        response.disposables
+                .filterNotNull()
+                .forEach { disposables.add(it) }
     }
 
     private fun displayEntries(entries: List<EntryListVO>) {
-        // TODO: maybe move to callback
         ViewUtils.setInvisible(progressBar)
         ViewUtils.setVisible(listEntry)
         
@@ -58,15 +83,8 @@ class EntryListFragment : Fragment() {
         }
     }
 
-    private fun fakeEntries(): List<EntryListVO> {
-        return listOf(
-                EntryListVO("1", Date(), TransactionType.TRANSFER_IN_FROM_TWD, 100.0, CurrencyType.USD, 2785.0, CurrencyType.THB, "匯率27.85"),
-                EntryListVO("2", Date(), TransactionType.TRANSFER_OUT_TO_TWD, 95.0, CurrencyType.USD, 2945.0, CurrencyType.THB, "匯率31；淨利299TWD"),
-                EntryListVO("3", Date(), TransactionType.TRANSFER_IN_FROM_FOREIGN, 100.0, CurrencyType.USD, 133.89, CurrencyType.GBP, "匯率0.7469"),
-                EntryListVO("4", Date(), TransactionType.TRANSFER_OUT_TO_FOREIGN, 133.89, CurrencyType.GBP, 100.0, CurrencyType.USD, "匯率0.7469"),
-                EntryListVO("5", Date(), TransactionType.TRANSFER_IN_FROM_INTEREST, 126.93, CurrencyType.ZAR, null, null, "利息收入"),
-                EntryListVO("6", Date(), TransactionType.TRANSFER_OUT_TO_OTHER, 2000.0, CurrencyType.USD, null, null, "轉至奈米投"),
-                EntryListVO("7", Date(), TransactionType.TRANSFER_IN_FROM_OTHER, 2050.0, CurrencyType.USD, null, null, null)
-        )
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
     }
 }

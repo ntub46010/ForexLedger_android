@@ -83,12 +83,17 @@ class CreateEntryFragment : Fragment() {
         if (!validateData()) {
             return
         }
-        
+
+        val descriptionStr = editDescription.text.let {
+            if (it.isNullOrEmpty()) null
+            else it.toString()
+        }
+
         val request = CreateEntryRequest(
                 bookId,
                 selectedEntryType!!,
                 selectedTransactionDate!!.time,
-                editDescription.text.toString(),
+                descriptionStr,
                 editForeignAmount.text.toString().toDouble(),
                 editTwdAmount.text.toString().toIntOrNull(),
                 selectedRelatedBook?.id,

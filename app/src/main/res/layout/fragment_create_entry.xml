@@ -56,10 +56,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editDescription"
-                style="@style/EditText"
-                android:editable="false"
-                android:clickable="true"
-                android:focusable="true" />
+                style="@style/EditText" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

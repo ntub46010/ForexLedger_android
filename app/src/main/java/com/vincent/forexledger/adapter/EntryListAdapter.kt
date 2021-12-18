@@ -29,13 +29,11 @@ class EntryListAdapter(private val entries: List<EntryListVO>)
             findViewById<TextView>(R.id.textPrimaryAmount).text = FormatUtils.formatMoney(entry.primaryAmount)
             findViewById<TextView>(R.id.textPrimaryCurrencyType).text = entry.primaryCurrencyType.name
 
-            if (entry.description.isNullOrEmpty()) {
-                findViewById<TextView>(R.id.textDescription).text = entry.description ?: context.getString(R.string.no_entry_description)
-            } else {
-                findViewById<TextView>(R.id.textDescription).text = entry.description
-            }
-
             val transactionType = entry.transactionType
+
+            findViewById<TextView>(R.id.textDescription).text =
+                    if (entry.description.isNullOrEmpty()) context.getString(transactionType.localNameResource)
+                    else entry.description
 
             findViewById<TextView>(R.id.textPrimaryDirection).text =
                     if (transactionType.isTransferIn) context.getString(R.string.transfer_in)
